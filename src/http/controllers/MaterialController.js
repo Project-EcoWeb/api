@@ -9,6 +9,15 @@ class MaterialController{
             return res.status(error.statusCode || 500).json({ message: error.message});
         }
     }
+    static async save(req, res){
+        const body = req.body;
+        try{
+            const data = await MaterialService.save(body, req.userId);
+            return res.json(data);
+        }catch(error){
+            return res.status(error.statusCode || 500).json({ message: error.message});
+        }
+    }
 }
 
 export default MaterialController;

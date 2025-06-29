@@ -3,7 +3,10 @@ import Material from '../model/Material.js';
 
 class MaterialRepository{
     static async findAll(){
-        return await Material.find(),populate({ path: 'autor', select: '-password'});
+        return await Material.find().populate({ path: 'author', select: '-password'});
+    }
+    static async save(data){
+        return await Material.create(data);
     }
 }
 
