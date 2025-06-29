@@ -1,15 +1,14 @@
-import ProjectService from "../../application/services/ProjectService.js";
+import MaterialService from "../../application/services/MaterialService.js";
 
-class ProjectController{
+class MaterialController{
     static async findAll(req, res){
         try{
-            const data = await ProjectService.findAll();
+            const data = await MaterialService.findAll();
             return res.json(data);
         }catch(error){
             return res.status(error.statusCode || 500).json({ message: error.message});
         }
-
     }
 }
 
-export default ProjectController;
+export default MaterialController;
