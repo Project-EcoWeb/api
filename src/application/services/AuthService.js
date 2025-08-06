@@ -14,9 +14,7 @@ class AuthService{
             return new AppError('user exists', 404);
         }
 
-        const { id, name: nameSaved, email: emailSaved } = await UserRespository.save({ name, email, password});
-        
-        return { id, nameSaved, email: emailSaved };
+        await UserRespository.save({ name, email, password});
     }
     static async login(data){
 
