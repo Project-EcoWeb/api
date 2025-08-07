@@ -8,6 +8,9 @@ class MaterialRepository{
     static async save(data){
         return await Material.create(data);
     }
+    static async findThreeLast() {
+        return await Material.find().sort({ date: -1 }).limit(3);
+    }
 }
 
 export default MaterialRepository;

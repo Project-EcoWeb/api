@@ -33,6 +33,11 @@ class ProjectService{
 
         return projectSaved;
     }
+
+    static async findThreeLast() {
+        const lastThreeProjects = await ProjectRepository.findThreeLast();
+        return lastThreeProjects;
+    }
 }
 
 export default ProjectService;

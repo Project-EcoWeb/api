@@ -6,6 +6,10 @@ const materialSchema = new Schema({
     description: String,
     location: String,
     quantity: String,
+    date: {
+        type: Date,
+        default: Date.now
+    },
     category: String,
     author: {
         type: Schema.Types.ObjectId,

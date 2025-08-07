@@ -6,6 +6,7 @@ import projectRoutes from './http/routes/projectRoutes.js';
 import materialRoutes from './http/routes/materialRoutes.js';
 import authentication from './http/middlewares/auth.js';
 import logger from './infra/logger/logger.js';
+import HomeController from "./http/controllers/HomeController.js";
 
 const app = express();
 
@@ -21,5 +22,6 @@ app.use(authentication);
 
 app.use('/projects', projectRoutes);
 app.use('/materials', materialRoutes);
+app.get('/home', HomeController.home);
 
 export { app };

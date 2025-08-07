@@ -26,6 +26,11 @@ class MaterialService{
 
         return data;
     }
+
+    static async findLastThree() {
+        const threeLastMaterials = await MaterialRepository.findThreeLast();
+        return threeLastMaterials;
+    }
 }
 
 export default MaterialService;

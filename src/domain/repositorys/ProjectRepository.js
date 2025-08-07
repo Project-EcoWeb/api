@@ -8,6 +8,10 @@ class ProjectRepository{
     static async save(data){
         return await Project.create(data);
     }
+
+    static async findThreeLast() {
+        return await Project.find().sort({ date: -1}).limit(3);
+    }
 }
 
 export default ProjectRepository;
