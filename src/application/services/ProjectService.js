@@ -1,4 +1,6 @@
 import ProjectRepository from '../../domain/repositorys/ProjectRepository.js';
+import AppError from '../../shared/error/AppError.js';
+import UserValidator from '../validations/UserValidator.js';
 
 class ProjectService{
     static async findAll(){
@@ -37,6 +39,16 @@ class ProjectService{
     static async findThreeLast() {
         const lastThreeProjects = await ProjectRepository.findThreeLast();
         return lastThreeProjects;
+    }
+
+    static async findByUser(userId) {
+
+        if (!(await UserValidator.isExists(userId))) {
+            throw new AppError('User not exists', 409);
+        }
+
+        const projects = await ProjectRepository.findByUser(userId);
+        return projects;
     }
 }
 

@@ -1,4 +1,6 @@
 import MaterialRepository from "../../domain/repositorys/MaterialRepository.js";
+import UserValidator from "../validations/UserValidator.js";
+import AppError from '../../shared/error/AppError.js';
 
 class MaterialService{
     static async findAll(){
@@ -30,6 +32,15 @@ class MaterialService{
     static async findLastThree() {
         const threeLastMaterials = await MaterialRepository.findThreeLast();
         return threeLastMaterials;
+    }
+
+    static async findByUser(userId) {
+        if(!(await UserValidator.isExists(userId))){
+            throw new AppError('User not exists', 409); 
+        }
+        
+        const materials = await MaterialRepository.findByUser(userId);
+        return materials;
     }
 }
 

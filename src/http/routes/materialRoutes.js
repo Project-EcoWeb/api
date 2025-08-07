@@ -5,4 +5,6 @@ const router = Router();
 
 router.get('/', MaterialController.findAll);
 router.post('/', MaterialController.save);
+router.get('/me', MaterialController.findByUser);
+
 export default router;

@@ -10,6 +10,9 @@ class UserRespository{
     static async findByEmailAndComparePassword({ email, password }){
         return await User.findOne({ email, password});
     }
+    static async findById(id) {
+        return await User.findById(id);
+    }
 }
 
 export default UserRespository;

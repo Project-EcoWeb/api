@@ -5,5 +5,6 @@ const router = Router();
 
 router.get('/', ProjectController.findAll);
 router.post('/', ProjectController.save);
+router.get('/me', ProjectController.findByUser);
 
 export default router;
