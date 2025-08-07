@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 const projectSchema = new Schema({
     title: String,
-    autor: {
+    author: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
