@@ -4,6 +4,7 @@ import { pinoHttp } from "pino-http";
 import  authRoutes  from './http/routes/authRoutes.js';
 import projectRoutes from './http/routes/projectRoutes.js';
 import materialRoutes from './http/routes/materialRoutes.js';
+import userRoutes from './http/routes/userRoutes.js';
 import authentication from './http/middlewares/auth.js';
 import logger from './infra/logger/logger.js';
 import HomeController from "./http/controllers/HomeController.js";
@@ -23,5 +24,6 @@ app.use(authentication);
 app.use('/projects', projectRoutes);
 app.use('/materials', materialRoutes);
 app.get('/home', HomeController.home);
+app.use('/users', userRoutes);
 
 export { app };
