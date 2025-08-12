@@ -4,10 +4,10 @@ import logger from "../../infra/logger/logger.js";
 class FavoriteController {
     static async save(req, res) {
         try {
-            res.json({ isActive: true });
+            req.body.user = req.userId;
             await FavoriteService.save(req.body);
+            res.end();
         } catch (error) {
-            logger.info(error);
             return res.status(error.statusCode || 500).json({ message: error.message });
         }
     }

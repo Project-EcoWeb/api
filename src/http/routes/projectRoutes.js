@@ -7,6 +7,6 @@ const router = Router();
 router.get('/', ProjectController.findAll);
 router.post('/', ProjectController.save);
 router.get('/me', ProjectController.findByUser);
-router.post('/:id/favorite', FavoriteController.save);
+router.post('/favorites', FavoriteController.save);
 
 export default router;
