@@ -7,8 +7,7 @@ class AuthController {
         try{
             const data = await AuthService.login({ email, password });
             return res.json(data);
-        }catch(error){
-            logger.info(error);
+        } catch (error) {
             return res.status(error.statusCode || 500).json({ message: error.message});
         }
     }
@@ -20,7 +19,6 @@ class AuthController {
             res.status(201);
             return res.end();
         }catch(error){
-            logger.info(error);
             return res.status(error.statusCode || 500).json({ message: error.message});
         }
     }
