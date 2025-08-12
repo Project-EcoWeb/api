@@ -4,7 +4,7 @@ class UserRespository{
     static async save(data){
         await User.create(data);
     }
-    static async findByEmail({ email }){
+    static async findByEmail(email){
         return await User.findOne( { email });
     }
     static async findByEmailAndComparePassword({ email, password }){
