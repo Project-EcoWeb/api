@@ -1,5 +1,4 @@
 import FavoriteService from '../../application/services/FavoriteService.js'
-import logger from "../../infra/logger/logger.js";
 
 class FavoriteController {
     static async save(req, res) {
@@ -12,7 +11,7 @@ class FavoriteController {
         }
     }
     static async getAllByUser(req, res) {
-        
+        return res.json({ isActive: true });
     }
 }
 
