@@ -50,6 +50,16 @@ class ProjectService{
         const projects = await ProjectRepository.findByUser(userId);
         return projects;
     }
+
+    static async countProjectsByUser(userId) {
+        
+        if (!(await UserValidator.isExists(userId))) {
+            throw new AppError('User not exists', 409);
+        }
+
+        const numberProjects = await ProjectRepository.countProjectsByUser(userId);
+        return numberProjects;
+    }
 }
 
 export default ProjectService;

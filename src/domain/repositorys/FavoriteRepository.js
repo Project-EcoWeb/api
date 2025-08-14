@@ -11,6 +11,9 @@ class FavoriteRepository {
             return await Favorite.find({ type: arguments[0] });
         }
     }
+    static async countFavoritesByUser(user) {
+        return await Favorite.countDocuments({ user });
+    }
 }
 
 export default FavoriteRepository;

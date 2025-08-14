@@ -1,3 +1,4 @@
+import FavoriteService from "../../application/services/FavoriteService.js";
 import ProjectService from "../../application/services/ProjectService.js";
 import logger from '../../infra/logger/logger.js';
 
@@ -26,6 +27,34 @@ class ProjectController{
         } catch (error) {
             logger.info(error);
             return res.status(error.status || 500).json({ message: error.message });
+        }
+    }
+    static async countProjectsByUser(req, res) {
+        try {
+            const user = req.userId;
+            const numberProjects = await ProjectService.countProjectsByUser(user);
+            return res.json({
+                data: {
+                    user,
+                    numberProjects
+                }
+            });
+        } catch (error) {
+            return res.status(error.statusCode || 500).json({ message: error.message });
+        }
+    }
+    static async countFavoritesByUser(req, res) {
+        try {
+            const user = req.userId;
+            const numberFavorites = await FavoriteService.countFavoritesByUser(user);
+            return res.json({
+                data: {
+                    user,
+                    numberFavorites
+                }
+            });
+        } catch (error) {
+            return res.status(error.statusCode || 500).json({ message: error.message });
         }
     }
 }

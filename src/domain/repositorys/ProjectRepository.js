@@ -16,6 +16,10 @@ class ProjectRepository{
     static async findByUser(userId) {
         return await Project.find({ author: userId });
     }
+
+    static async countProjectsByUser(userId) {
+        return await Project.countDocuments({ user: userId });
+    }
 }
 
 export default ProjectRepository;
