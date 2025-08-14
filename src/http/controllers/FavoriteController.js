@@ -11,7 +11,14 @@ class FavoriteController {
         }
     }
     static async getAllByUser(req, res) {
-        return res.json({ isActive: true });
+        try {
+            const type = req.query.type;
+            const user = req.userId;
+            const data = await FavoriteService.getAllByUser({ type, user });
+            return res.json(data);
+        } catch (error) {
+            return res.status(error.statusCode || 500).json({ message: error.message });
+        }
     }
 }
 
