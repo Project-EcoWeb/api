@@ -8,10 +8,10 @@ const favoriteSchema = new Schema({
     },
     onModel: {
         type: String,
-        enum: ['project', 'material'],
+        enum: ['Project', 'Material'],
         required: true
     },
-    references: {
+    reference: {
         type: Schema.Types.ObjectId,
         required: true,
         refPath: 'onModel'
