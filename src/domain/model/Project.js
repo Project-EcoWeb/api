@@ -1,25 +1,46 @@
 import { Schema, model } from "mongoose";
 
 const projectSchema = new Schema({
-    title: String,
-    author: {
+    title: {
+        type: String,
+        required: [true, 'title is required'], 
+        trim: true
+    },
+    user: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: [true, 'user is required']
     },
-    date: {
-        type: Date,
-        default: Date.now
+    image: {
+        type: String,
+        required: [true, 'image is required']
     },
-    image: String,
-    description: String,
-    materials: [String],
-    stages: [String],
+    description: {
+        type: String,
+        required: [true, 'description is required'],
+    },
+    materials: {
+        type: [String],
+        required: [true, ' material is required'],
+        min: [1, 'one material is required']
+    },
+    stages: {
+        type: [String],
+        required: [true, 'One stage is required'],
+        min: [1, 'one stage is required']
+    },
     video: String,
-    category: String,
+    category: {
+        type: String,
+        required: [true, 'category is required']
+    },
     difficulty: {
         type: String,
-        enum: ['Facil', 'Medio', 'Dificil']
+        enum: ['Facil', 'Medio', 'Dificil'],
+        required: true
     }
+}, {
+    timestamps: true
 })
 
 export default model('Project', projectSchema);

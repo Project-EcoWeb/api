@@ -1,19 +1,25 @@
-import { model, Schema } from 'mongoose';
+import { model, Schema, SchemaType } from 'mongoose';
 
 const favoriteSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User',
+        required: [true, 'user is required']
     },
-    type: {
+    onModel: {
         type: String,
-        enum: ['project', 'material']
+        enum: ['project', 'material'],
+        required: true
     },
-    referencesId: String,
-    createdAt: {
-        type: Date,
-        default: Date.now
+    references: {
+        type: Schema.Types.ObjectId,
+        required: true,
+        refPath: 'onModel'
     }
-})
+}, {
+    timestamps: { createdAt: true, updatedAt: false }
+});
+
+favoriteSchema.index({ user: 1, onModel: 1, reference: 1 }, { unique: true });
 
 export default model('Favorite', favoriteSchema);
