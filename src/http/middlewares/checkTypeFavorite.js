@@ -5,7 +5,9 @@ export default async (req, res, next) => {
 
     if (queryParams.length === 0) {
         return next();
-    }else if (!(queryParams.length === 1 && types.includes(queryParams[0]))) {
+    }
+    
+    if (!(queryParams.length === 1 && types.includes(queryParams[0]))) {
         return res.status(400).json({ message: 'incorrect query params' });
     }
 

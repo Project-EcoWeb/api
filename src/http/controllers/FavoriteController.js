@@ -12,9 +12,10 @@ class FavoriteController {
     }
     static async getAllByUser(req, res) {
         try {
-            const type = req.query.type;
-            const user = req.userId;
-            const data = await FavoriteService.getAllByUser({ type, user });
+            const data = await FavoriteService.getAllByUser({
+                type: req.query.type,
+                user: req.userId
+            });
             return res.json(data);
         } catch (error) {
             return res.status(error.statusCode || 500).json({ message: error.message });

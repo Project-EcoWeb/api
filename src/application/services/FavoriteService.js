@@ -8,10 +8,10 @@ class FavoriteService {
     }
     static async getAllByUser(data) {
         if (!data.type) {
-            return await FavoriteRepository.findAll();
+            return await FavoriteRepository.findAllByUser(data);
         }
 
-        return await FavoriteRepository.findAll(data.type);
+        return await FavoriteRepository.findAllByUser(data);
     }
     static async countFavoritesByUser(userId) {
         if (!(await UserValidator.isExists(userId))) {

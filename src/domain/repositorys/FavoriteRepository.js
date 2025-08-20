@@ -4,11 +4,13 @@ class FavoriteRepository {
     static async save(data) {
         await Favorite.create(data);
     }
-    static async findAll() {
-        if (arguments.length === 0) {
-            return await Favorite.find();
+    static async findAllByUser({ user, type }) {
+        if (!type) {
+            return await Favorite.find({ user });
         } else {
-            return await Favorite.find({ type: arguments[0] });
+            type = type.charAt(0).toUpperCase() + type.slice(1);
+            console.log(type);
+            return await Favorite.find({ user: user, onModel: type });
         }
     }
     static async countFavoritesByUser(user) {
