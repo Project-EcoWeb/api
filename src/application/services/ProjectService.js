@@ -60,6 +60,22 @@ class ProjectService{
         const numberProjects = await ProjectRepository.countProjectsByUser(userId);
         return numberProjects;
     }
+
+    static async getById({ id, user }) {
+
+        const project = await ProjectRepository.findById(id);
+
+        if (!project) {
+            throw new AppError('project not found', 404);
+        }
+
+        console.log(project.user.id);
+        if (project.user.id !== user) {
+            throw new AppError('unauthorized for view project', 401)
+        }
+
+        return project;
+    }
 }
 
 export default ProjectService;

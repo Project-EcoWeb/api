@@ -57,6 +57,14 @@ class ProjectController{
             return res.status(error.statusCode || 500).json({ message: error.message });
         }
     }
+    static async getById(req, res) {
+        try {
+            const project = await ProjectService.getById({ id: req.params.id, user: req.userId });
+            return res.json(project);
+        } catch (error) {
+            return res.status(error.statusCode || 500).json({ message: error.message });
+        }
+    }
 }
 
 export default ProjectController;

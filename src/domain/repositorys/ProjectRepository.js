@@ -2,7 +2,7 @@ import Project from "../model/Project.js";
 
 class ProjectRepository{
     static async findAll(){
-        return await Project.find().populate({ path: 'autor', select: '-password'});
+        return await Project.find().populate({ path: 'user', select: '-password'});
     }
 
     static async save(data){
@@ -19,6 +19,10 @@ class ProjectRepository{
 
     static async countProjectsByUser(userId) {
         return await Project.countDocuments({ user: userId });
+    }
+
+    static async findById(id) {
+        return await Project.findById(id).populate({ path: 'user', select: '-password' });
     }
 }
 

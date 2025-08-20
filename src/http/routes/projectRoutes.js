@@ -8,5 +8,6 @@ router.get('/', ProjectController.findAll);
 router.post('/', ProjectController.save);
 router.get('/me', ProjectController.findByUser);
 router.post('/favorites', FavoriteController.save);
+router.get('/:id', ProjectController.getById);
 
 export default router;
