@@ -7,5 +7,6 @@ router.get('/', MaterialController.findAll);
 router.post('/', MaterialController.save);
 router.get('/me', MaterialController.findByUser);
 router.post('/favorites', FavoriteController.save)
+router.get('/:id', MaterialController.getById);
 
 export default router;

@@ -42,6 +42,20 @@ class MaterialService{
         const materials = await MaterialRepository.findByUser(userId);
         return materials;
     }
+
+    static async getById({ user, id }) {
+        const material = await MaterialRepository.findById(id);
+
+        if (!material) {
+            throw new AppError('material not found', 404);
+        }
+
+        if (material.user.id !== user) {
+            throw new AppError('unauthorized for view project');
+        }
+
+        return material;
+    }
 }
 
 export default MaterialService;

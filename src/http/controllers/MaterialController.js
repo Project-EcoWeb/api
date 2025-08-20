@@ -25,7 +25,15 @@ class MaterialController{
             return res.json(materials);
         } catch (error) {
             logger.info(error);
-            return res.status(error.statusCode || 500).json({ message: error, message });
+            return res.status(error.statusCode || 500).json({ message: error.message });
+        }
+    }
+    static async getById(req, res) {
+        try {
+            const material = await MaterialService.getById({ id: req.params.id, user: req.userId });
+            return res.json(material);
+        } catch (error) {
+            return res.status(error.statusCode || 500).json({ message: error.message });
         }
     }
 }
