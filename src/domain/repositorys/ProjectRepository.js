@@ -24,6 +24,13 @@ class ProjectRepository{
     static async findById(id) {
         return await Project.findById(id).populate({ path: 'user', select: '-password' });
     }
+
+    static async findAllByContainsText(text) {
+        const projectsSaved = await Project.find();
+        const projectsFiltered = projectsSaved.filter(project => project.title.contains(text));
+        console.log(filter);
+        return projectsFiltered;
+    }
 }
 
 export default ProjectRepository;

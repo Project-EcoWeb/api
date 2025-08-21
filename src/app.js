@@ -8,6 +8,7 @@ import userRoutes from './http/routes/userRoutes.js';
 import authentication from './http/middlewares/auth.js';
 import logger from './infra/logger/logger.js';
 import HomeController from "./http/controllers/HomeController.js";
+import searchRoutes from './http/routes/searchRoutes.js';
 
 const app = express();
 
@@ -25,5 +26,5 @@ app.use('/projects', projectRoutes);
 app.use('/materials', materialRoutes);
 app.get('/home', HomeController.home);
 app.use('/users', userRoutes);
-
+app.use('/search', searchRoutes);
 export { app };
