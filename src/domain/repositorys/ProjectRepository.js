@@ -26,10 +26,9 @@ class ProjectRepository{
     }
 
     static async findAllByContainsText(text) {
-        const projectsSaved = await Project.find();
-        const projectsFiltered = projectsSaved.filter(project => project.title.contains(text));
-        console.log(filter);
-        return projectsFiltered;
+        return await Project.find({
+            title: { $regex: text, $options: 'i'}
+        }).select('-user');;
     }
 }
 

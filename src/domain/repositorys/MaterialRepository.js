@@ -1,10 +1,10 @@
 import Material from '../model/Material.js';
 
-class MaterialRepository{
-    static async findAll(){
-        return await Material.find().populate({ path: 'user', select: '-password'});
+class MaterialRepository {
+    static async findAll() {
+        return await Material.find().populate({ path: 'user', select: '-password' });
     }
-    static async save(data){
+    static async save(data) {
         return await Material.create(data);
     }
     static async findThreeLast() {
@@ -18,10 +18,9 @@ class MaterialRepository{
     }
 
     static async findAllByContainsText(text) {
-        const materialsSaved = await Material.find();
-        const materialsFiltered = materialsSaved.filter(material => material.name.contains(text));
-        console.log(materialsFiltered);
-        return materialsFiltered;
+        return await Material.find({
+            name: { $regex: text, $options: 'i' }
+        }).select('-user');;
     }
 }
 

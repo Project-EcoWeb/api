@@ -1,4 +1,3 @@
-import AppError from "../../shared/error/AppError";
 import SearchService from '../../application/services/SearchService.js';
 
 
