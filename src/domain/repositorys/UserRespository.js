@@ -13,6 +13,9 @@ class UserRespository{
     static async findById(id) {
         return await User.findById(id);
     }
+    static async update({ id, user }) {
+        await User.findByIdAndUpdate(id, user, { runValidators: true });
+    }
 }
 
 export default UserRespository;
