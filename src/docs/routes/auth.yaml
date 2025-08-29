@@ -1,0 +1,71 @@
+tags:
+  - name: Autenticação
+    description: Endpoints para registro e login de usuários.
+
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Autenticação
+      summary: Registra um novo usuário.
+      description: Cria uma nova conta de usuário no sistema.
+      requestBody:
+        description: Dados necessários para criar um novo usuário.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest' 
+      responses:
+        '201':
+          description: Usuário criado com sucesso. A resposta não possui corpo.
+        '400':
+          description: Requisição inválida (campos faltando).
+          content:
+            application/json:
+              schema:
+                example:
+                  message: 'fields incompleted'
+        '409':
+          description: Conflito (o e-mail já está em uso).
+          content:
+            application/json:
+              schema:
+                example:
+                  message: 'user with this email already registered'
+
+  /auth/login:
+    post:
+      tags:
+        - Autenticação
+      summary: Realiza o login de um usuário.
+      description: Autentica um usuário com e-mail e senha, retornando os dados do usuário e um token JWT.
+      requestBody:
+        description: Credenciais para autenticação.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest' 
+      responses:
+        '200':
+          description: Login bem-sucedido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginSuccessResponse' 
+        '400':
+          description: Senha incorreta.
+          content:
+            application/json:
+              schema:
+                example:
+                  message: 'password incorrect'
+        '404':
+          description: Usuário não encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+                example:
+                  message: 'user not exists'
