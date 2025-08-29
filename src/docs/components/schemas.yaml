@@ -1,0 +1,75 @@
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID único do usuário gerado pelo MongoDB.
+          example: '63b4a3e6a2b4cde37d5c935a'
+        name:
+          type: string
+          description: Nome completo do usuário.
+          example: 'Ada Lovelace'
+        email:
+          type: string
+          format: email
+          description: Endereço de e-mail único do usuário.
+          example: 'ada.lovelace@example.com'
+
+    RegisterRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Nome do usuário.
+          example: 'Ada Lovelace'
+        email:
+          type: string
+          format: email
+          description: E-mail para o novo registro.
+          example: 'ada.lovelace@example.com'
+        password:
+          type: string
+          format: password
+          description: Senha para o novo usuário.
+          example: 'senhaSegura123'
+      required:
+        - name
+        - email
+        - password
+
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: E-mail do usuário cadastrado.
+          example: 'ada.lovelace@example.com'
+        password:
+          type: string
+          format: password
+          description: Senha do usuário.
+          example: 'senhaSegura123'
+      required:
+        - email
+        - password
+
+    LoginSuccessResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User' 
+        token:
+          type: string
+          description: Token JWT para autenticação.
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYjRhM2U2YTJiNGNkZTM3ZDVjOTM1YSIsImlhdCI6MTY3Mjc4NDM3NSwiZXhwIjoxNjcyODYwNzc1fQ.tC_b_6m...'
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Descrição detalhada do erro.
+          example: 'user not exists'
