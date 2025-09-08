@@ -1,6 +1,7 @@
 import MaterialRepository from "../../domain/repositorys/MaterialRepository.js";
 import UserValidator from "../validations/UserValidator.js";
 import AppError from '../../shared/error/AppError.js';
+import MaterialValidator from "../validations/MaterialValidator.js";
 
 class MaterialService{
     static async findAll(){
@@ -55,6 +56,15 @@ class MaterialService{
         }
 
         return material;
+    }
+
+    static async updateStatus(data) {
+
+        if (!(await MaterialValidator.isExists(data.id))) throw new AppError('material is not exists', 404);
+
+        if (!(await MaterialValidator.checkUser({ id: data.id, user: data.userId}))) throw new AppError('this material not is authorized', 403);
+
+        await MaterialRepository.updateStatus({id: data.status, status: data.status});
     }
 }
 

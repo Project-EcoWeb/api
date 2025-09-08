@@ -22,6 +22,12 @@ class MaterialRepository {
             name: { $regex: text, $options: 'i' }
         }).select('-user');;
     }
+
+    static async updateStatus({id, status}) {
+        const material = await Material.findById(id);
+        material.status = status;
+        material.save();
+    }
 }
 
 export default MaterialRepository;
