@@ -25,11 +25,30 @@ const materialSchema = new Schema({
         type: String,
         required: [true, 'category is required'],
     },
+    estimatedWeightKg: {
+        type: Number,
+        required: [true, 'weight is required'],
+        min: [0, 'weight is not zero or negative']
+    },
+    status: {
+        type: String,
+        enum: ['available', 'reserved', 'finished'],
+        default: 'available'
+    },
+    removedBy: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    },
+    removedAt: {
+        type: Date
+    },
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: [true, 'user is required']
     }
-})
+}, {
+    timestamps: true
+});
 
 export default model('Material', materialSchema);
