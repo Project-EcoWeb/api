@@ -14,8 +14,9 @@ class MaterialService{
         description,
         location,
         quantity,
-        category
-    }, author){
+        category,
+        estimatedWeightKg
+    }, user){
 
         const data = await MaterialRepository.save({
             name,
@@ -24,7 +25,8 @@ class MaterialService{
             location,
             quantity,
             category,
-            author
+            estimatedWeightKg,
+            user
         })
 
         return data;
@@ -64,7 +66,7 @@ class MaterialService{
 
         if (!(await MaterialValidator.checkUser({ id: data.id, user: data.userId}))) throw new AppError('this material not is authorized', 403);
 
-        await MaterialRepository.updateStatus({id: data.status, status: data.status});
+        await MaterialRepository.updateStatus({id: data.id, status: data.status});
     }
 }
 

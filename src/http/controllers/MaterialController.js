@@ -12,6 +12,7 @@ class MaterialController{
     }
     static async save(req, res){
         const body = req.body;
+        console.log(req.userId);
         try{
             const data = await MaterialService.save(body, req.userId);
             return res.json(data);
@@ -38,7 +39,7 @@ class MaterialController{
     }
     static async updateStatus(req, res) {
         try {
-            const { status } = req.body
+            const { status } = req.body;
             const id = req.params.id;
             await MaterialService.updateStatus({ status, id, user: req.userId });
             return res.end();
