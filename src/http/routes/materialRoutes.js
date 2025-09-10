@@ -8,5 +8,6 @@ router.post('/', MaterialController.save);
 router.get('/me', MaterialController.findByUser);
 router.post('/favorites', FavoriteController.save)
 router.get('/:id', MaterialController.getById);
+router.patch('/:id/update-status', MaterialController.updateStatus);
 
 export default router;

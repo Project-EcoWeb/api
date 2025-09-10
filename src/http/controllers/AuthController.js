@@ -3,8 +3,8 @@ import AuthService from "../../application/services/AuthService.js";
 
 class AuthController {
     static async login(req, res){
-        const { email, password} = req.body;
         try{
+            const { email, password} = req.body;
             const data = await AuthService.login({ email, password });
             return res.json(data);
         } catch (error) {

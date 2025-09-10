@@ -8,7 +8,12 @@ class UserRespository{
         return await User.findOne( { email });
     }
     static async findByEmailAndComparePassword({ email, password }){
-        return await User.findOne({ email, password});
+        const user = await User.findOne({ email }).select('+password');
+        return user.comparePassword(password) ? {
+                id: user.id,
+                email: user.email,
+                name: user.name
+            } : false;
     }
     static async findById(id) {
         return await User.findById(id);
