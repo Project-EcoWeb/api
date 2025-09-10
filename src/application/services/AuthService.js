@@ -19,26 +19,23 @@ class AuthService{
     }
     static async login(data){
 
-        const user = await UserRespository.findByEmail(data.email);
-
-        if(!user){
-            throw new AppError('user not exists', 404);
+        if(!(await UserValidator.isExistsByEmail(data.email))){
+            throw new AppError('user not exists or email incorrect', 404);
         }
 
-        const userVerified = await UserRespository.findByEmailAndComparePassword(data);
+        const user = await UserRespository.findByEmailAndComparePassword({ email: data.email, password: data.password});
         
-        if(!userVerified){
+        if (!user){
             throw new AppError('password incorrect', 400);
         }
 
-        const { id, name, email}= user;
-
-         return {
+        const { id, name, email } = user;
+        return {
             user: {id,name,email},
             token: jwt.sign({id}, authConfig.secret, {
                 expiresIn: authConfig.expiresIn
             })
-         }
+        }
     }
 }
 
