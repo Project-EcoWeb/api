@@ -18,11 +18,9 @@ class FeedbackService{
          * Pendente criar colecção de fornecedores
          */
 
-        const { material } = await FeedbackRepository.create(data);
-        
-        /**
-         * Pendente atualizar o status material automaticamente
-         */
+        const { material, supplier } = await FeedbackRepository.create(data);
+
+        await MaterialService.updateStatus({ id: material, user: supplier, status: "finished" });
     }
 }
 
