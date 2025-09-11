@@ -41,7 +41,7 @@ class AuthService{
     }
     static async loginCompany(data) {
         
-        if (!(await CompanyValidator.isExistsByEmailOrCnpj(data.emailOrCnpj))) {
+        if (!(await CompanyValidator.isExistsByEmailOrCnpj({emailOrCnpj: data.emailOrCnpj}))) {
             throw new AppError('company not exists or, email or cnpj incorrect', 404);
         }
 
