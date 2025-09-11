@@ -42,9 +42,9 @@ const materialSchema = new Schema({
     removedAt: {
         type: Date
     },
-    user: {
+    company: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Company',
         required: [true, 'user is required']
     }
 }, {
