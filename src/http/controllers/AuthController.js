@@ -6,6 +6,7 @@ class AuthController {
         try {
 
             if (req.query.q === 'company') {
+                const { emailOrCnpj, password } = req.body;
                 const token = await AuthService.loginCompany({ emailOrCnpj, password });
                 return res.json(token);
             }
@@ -21,6 +22,12 @@ class AuthController {
     static async register(req, res){
         const data = req.body;
         try{
+
+            if (req.query.q === 'company') {
+                await AuthService.registerCompany(data);
+                return res.status(201).end();
+            }
+
             await AuthService.register(data);
             res.status(201);
             return res.end();

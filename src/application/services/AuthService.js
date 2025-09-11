@@ -41,7 +41,7 @@ class AuthService{
     }
     static async loginCompany(data) {
         
-        if (!(await CompanyValidator.isExistsByEmailOrCnpj(data.emailOrCnpj))) {
+        if (!(await CompanyValidator.isExistsByEmailOrCnpj({emailOrCnpj: data.emailOrCnpj}))) {
             throw new AppError('company not exists or, email or cnpj incorrect', 404);
         }
 
@@ -57,6 +57,24 @@ class AuthService{
             company: { id, name, logo },
             token: jwt.sign({ id }, authConfig.secret, { expiresIn: authConfig.expiresIn })
         };
+    }
+    static async registerCompany({ name, abbreviation, cnpj, phone, cep, email, responsibleName, logo, password }) {
+        
+        if (!(await CompanyValidator.isExistsByEmailOrCnpj({ email, cnpj }))) {
+            throw new AppError('email or cnpj is registred', 403);
+        }
+
+        await CompanyRepository.create({
+            name,
+            abbreviation,
+            cnpj,
+            phone,
+            cep,
+            email,
+            responsibleName,
+            logo,
+            password
+        });
     }
 }
 
