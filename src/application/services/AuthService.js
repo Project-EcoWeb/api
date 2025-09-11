@@ -3,6 +3,8 @@ import AppError from "../../shared/error/AppError.js";
 import jwt from 'jsonwebtoken';
 import authConfig from '../../shared/config/auth.js';
 import UserValidator from "../validations/UserValidator.js";
+import CompanyValidator from "../validations/CompanyValidator.js";
+import CompanyRepository from "../../domain/repositorys/CompanyRepository.js";
 
 class AuthService{
     static async register({ name, email, password}){
@@ -36,6 +38,25 @@ class AuthService{
                 expiresIn: authConfig.expiresIn
             })
         }
+    }
+    static async loginCompany(data) {
+        
+        if (!(await CompanyValidator.isExistsByEmailOrCnpj(data.emailOrCnpj))) {
+            throw new AppError('company not exists or, email or cnpj incorrect', 404);
+        }
+
+        const company = await CompanyRepository.findOneAndComparePassword({ emailOrCnpj: data.emailOrCnpj, password: data.password });
+
+        if (!company) {
+            throw new AppError('password incorrect', 400);
+        }
+
+        const { id, name, logo } = company;
+
+        return {
+            company: { id, name, logo },
+            token: jwt.sign({ id }, authConfig.secret, { expiresIn: authConfig.expiresIn })
+        };
     }
 }
 

@@ -3,7 +3,13 @@ import AuthService from "../../application/services/AuthService.js";
 
 class AuthController {
     static async login(req, res){
-        try{
+        try {
+
+            if (req.query.q === 'company') {
+                const token = await AuthService.loginCompany({ emailOrCnpj, password });
+                return res.json(token);
+            }
+            
             const { email, password} = req.body;
             const data = await AuthService.login({ email, password });
             return res.json(data);
