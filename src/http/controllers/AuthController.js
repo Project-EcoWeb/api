@@ -22,6 +22,12 @@ class AuthController {
     static async register(req, res){
         const data = req.body;
         try{
+
+            if (req.query.q === 'company') {
+                await AuthService.registerCompany(data);
+                return res.status(201).end();
+            }
+
             await AuthService.register(data);
             res.status(201);
             return res.end();

@@ -58,6 +58,24 @@ class AuthService{
             token: jwt.sign({ id }, authConfig.secret, { expiresIn: authConfig.expiresIn })
         };
     }
+    static async registerCompany({ name, abbreviation, cnpj, phone, cep, email, responsibleName, logo, password }) {
+        
+        if (!(await CompanyValidator.isExistsByEmailOrCnpj({ email, cnpj }))) {
+            throw new AppError('email or cnpj is registred', 403);
+        }
+
+        await CompanyRepository.create({
+            name,
+            abbreviation,
+            cnpj,
+            phone,
+            cep,
+            email,
+            responsibleName,
+            logo,
+            password
+        });
+    }
 }
 
 export default AuthService;
