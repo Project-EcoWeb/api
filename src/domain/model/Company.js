@@ -21,7 +21,6 @@ const companySchema = new Schema({
     },
     phone: {
         type: String,
-        unique: true,
         match: [/^(\(?\d{2}\)?\s?)?\d{4,5}-?\d{4}$/, 'phone in format invalid'],
         required: [true, 'phone is required'],
 
@@ -30,7 +29,7 @@ const companySchema = new Schema({
         type: String,
         required: [true, 'cep is required'],
         trim: true,
-        match: [, 'cep in format invalid']
+        match: [ /^\d{5}-?\d{3}$/, 'cep in format invalid']
     },
     email: {
         type: String,
