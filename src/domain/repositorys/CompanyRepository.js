@@ -44,6 +44,12 @@ class CompanyRepository {
                 logo: company.logo
             } : false;
     }
+    static async findByEmail(email) {
+        return await Company.findOne({ email });
+    }
+    static async findByCnpj(cnpj) {
+        return await Company.findOne({ cnpj });
+    }
 }
 
 export default CompanyRepository;
