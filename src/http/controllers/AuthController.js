@@ -6,6 +6,7 @@ class AuthController {
         try {
 
             if (req.query.q === 'company') {
+                const { emailOrCnpj, password } = req.body;
                 const token = await AuthService.loginCompany({ emailOrCnpj, password });
                 return res.json(token);
             }
