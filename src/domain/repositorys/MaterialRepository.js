@@ -2,7 +2,7 @@ import Material from '../model/Material.js';
 
 class MaterialRepository {
     static async findAll() {
-        return await Material.find().populate({ path: 'user', select: '-password' });
+        return await Material.find().populate({ path: 'company', select: '-password' });
     }
     static async save(data) {
         return await Material.create(data);
@@ -11,10 +11,10 @@ class MaterialRepository {
         return await Material.find().sort({ date: -1 }).limit(3);
     }
     static async findByUser(user) {
-        return await Material.find({ user });
+        return await Material.find({ company: user });
     }
     static async findById(id) {
-        return await Material.findById(id).populate({ path: 'user', select: '-password' });
+        return await Material.findById(id).populate({ path: 'company', select: '-password' });
     }
 
     static async findAllByContainsText(text) {
