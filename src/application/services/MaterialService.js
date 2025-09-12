@@ -2,6 +2,7 @@ import MaterialRepository from "../../domain/repositorys/MaterialRepository.js";
 import UserValidator from "../validations/UserValidator.js";
 import AppError from '../../shared/error/AppError.js';
 import MaterialValidator from "../validations/MaterialValidator.js";
+import CompanyValidator from "../validations/CompanyValidator.js";
 
 class MaterialService{
     static async findAll(){
@@ -38,7 +39,7 @@ class MaterialService{
     }
 
     static async findByUser(userId) {
-        if(!(await UserValidator.isExists(userId))){
+        if(!(await CompanyValidator.isExists(userId))){
             throw new AppError('User not exists', 409); 
         }
         
@@ -53,7 +54,7 @@ class MaterialService{
             throw new AppError('material not found', 404);
         }
 
-        if (material.user.id !== user) {
+        if (material.company.id !== user) {
             throw new AppError('unauthorized for view project');
         }
 
