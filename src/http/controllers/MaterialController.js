@@ -12,7 +12,6 @@ class MaterialController{
     }
     static async save(req, res){
         const body = req.body;
-        console.log(req.userId);
         try{
             const data = await MaterialService.save(body, req.userId);
             return res.json(data);
