@@ -2,7 +2,7 @@ import Material from '../model/Material.js';
 
 class MaterialRepository {
     static async findAll() {
-        return await Material.find().populate({ path: 'user', select: '-password' });
+        return await Material.find().populate({ path: 'company', select: '-password' });
     }
     static async save(data) {
         return await Material.create(data);
