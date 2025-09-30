@@ -11,6 +11,9 @@ class CompanyValidator {
             return !(await CompanyRepository.findByEmailOrCnpj(email, cnpj)) ? false : true;
         }
     }
+    static async isExistsByName(name) {
+        return !(await CompanyRepository.findByEmail(name)) ? false : true;
+    }
 }
 
 export default CompanyValidator;

@@ -20,7 +20,7 @@ class CompanyRepository {
         }
 
         if (arguments.length === 2) {
-            return await Company.find({
+            return await Company.findOne({
                 $or: [{
                     email: arguments[0]
                 }, {
@@ -49,6 +49,9 @@ class CompanyRepository {
     }
     static async findByCnpj(cnpj) {
         return await Company.findOne({ cnpj });
+    }
+    static async findByName(name) {
+        return await Company.findOne({ name });
     }
 }
 
