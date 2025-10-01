@@ -8,10 +8,6 @@ const companySchema = new Schema({
         required: [true, 'name is required'],
         unique: true
     },
-    abbreviation: {
-        type: String,
-        trim: true
-    },
     cnpj: {
         type: String,
         trim: true,
@@ -24,6 +20,10 @@ const companySchema = new Schema({
         match: [/^(\(?\d{2}\)?\s?)?\d{4,5}-?\d{4}$/, 'phone in format invalid'],
         required: [true, 'phone is required'],
 
+    },
+    location: {
+        type: String,
+        required: [true, 'Endereço é obrigatório']
     },
     cep: {
         type: String,
