@@ -25,10 +25,12 @@ const materialSchema = new Schema({
         type: String,
         required: [true, 'category is required'],
     },
-    estimatedWeightKg: {
-        type: Number,
-        required: [true, 'weight is required'],
-        min: [0, 'weight is not zero or negative']
+    unitOfMeasure: {
+        type: String,
+        required: [true, 'unit of measure is required'],
+    },
+    instructions: {
+        type: String,
     },
     status: {
         type: String,

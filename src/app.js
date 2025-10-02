@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import './infra/db/index.js';
 import { pinoHttp } from "pino-http";
 import swaggerUi from 'swagger-ui-express';
@@ -17,6 +18,7 @@ const app = express();
 app.use(pinoHttp({ logger }));
 
 app.use(express.json());
+app.use(cors());
 
 app.use('/public', express.static('public'));
 

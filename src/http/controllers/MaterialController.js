@@ -13,8 +13,8 @@ class MaterialController{
     static async save(req, res){
         const body = req.body;
         try{
-            const data = await MaterialService.save(body, req.userId);
-            return res.json(data);
+            await MaterialService.save(body, req.userId);
+            return res.status(201).end();
         }catch(error){
             return res.status(error.statusCode || 500).json({ message: error.message});
         }
