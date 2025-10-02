@@ -15,21 +15,21 @@ class MaterialService{
         location,
         quantity,
         category,
-        estimatedWeightKg
+        unitOfMeasure,
+        instructions
     }, user){
 
-        const data = await MaterialRepository.save({
+        await MaterialRepository.save({
             name,
             image,
             description,
             location,
             quantity,
             category,
-            estimatedWeightKg,
-            user
+            unitOfMeasure,
+            instructions,
+            company: user
         })
-
-        return data;
     }
 
     static async findLastThree() {
