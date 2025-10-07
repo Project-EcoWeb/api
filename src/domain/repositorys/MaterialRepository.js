@@ -28,6 +28,10 @@ class MaterialRepository {
         material.status = status;
         material.save();
     }
+
+    static async deleteById(id) {
+        await Material.deleteOne({ _id: id});
+    }
 }
 
 export default MaterialRepository;
