@@ -46,6 +46,16 @@ class MaterialController{
             return res.status(error.statusCode || 500).json({ message: error.message });
         }
     }
+    static async delete(req, res) {
+        try {
+            const { id } = req.params;
+            const user = req.userId;
+            await MaterialService.delete({ id, user });
+            return res.status(200).end();
+        } catch (error) {
+            return res.status(error.statusCode || 500).json({ message: error.message });
+        }
+    }
 }
 
 export default MaterialController;
