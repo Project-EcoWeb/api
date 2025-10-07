@@ -5,8 +5,7 @@ class MaterialValidator {
         return !MaterialRepository.findById(id) ? false: true;
     }
     static async checkUser({ id, user }) {
-        const { company: userSaved } = MaterialRepository.findById(id);
-
+        const { company: userSaved } = await MaterialRepository.findById(id);
         return userSaved.id === user ? true : false;
     }
 }
