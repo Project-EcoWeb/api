@@ -9,5 +9,6 @@ router.get('/me', MaterialController.findByUser);
 router.post('/favorites', FavoriteController.save)
 router.get('/:id', MaterialController.getById);
 router.patch('/:id/update-status', MaterialController.updateStatus);
+router.delete('/:id', MaterialController.delete);
 
 export default router;
