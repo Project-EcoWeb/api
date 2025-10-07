@@ -68,6 +68,15 @@ class MaterialService{
 
         await MaterialRepository.updateStatus({id: data.id, status: data.status});
     }
+
+    static async delete({ id, user }) {
+
+        if (!(await MaterialValidator.isExists(id))) throw new AppError('material is not exists', 404);
+
+        if (!(await MaterialValidator.checkUser({ id, user }))) throw new AppError('this material not is authorized', 403);
+
+        await MaterialRepository.deleteById(id);
+    }
 }
 
 export default MaterialService;
