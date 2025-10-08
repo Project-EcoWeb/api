@@ -56,6 +56,17 @@ class MaterialController{
             return res.status(error.statusCode || 500).json({ message: error.message });
         }
     }
+    static async update(req, res) {
+        try {
+            const { id } = req.params;
+            const bodyData = req.body;
+            const user = req.userId;
+            await MaterialService.update({ id, bodyData, user });
+            return res.status(200).end();
+        } catch (error) {
+            return res.status(error.statusCode || 500).json({ message: error.message });
+        }
+    }
 }
 
 export default MaterialController;

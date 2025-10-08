@@ -30,7 +30,11 @@ class MaterialRepository {
     }
 
     static async deleteById(id) {
-        await Material.deleteOne({ _id: id});
+        Material.findByIdAndDelete(id).exec();
+    }
+
+    static async updateById(id, material) {
+        Material.findByIdAndUpdate(id, material, { runValidators: true }).exec();
     }
 }
 
