@@ -10,5 +10,6 @@ router.post('/favorites', FavoriteController.save)
 router.get('/:id', MaterialController.getById);
 router.patch('/:id/update-status', MaterialController.updateStatus);
 router.delete('/:id', MaterialController.delete);
+router.patch('/:id', MaterialController.update);
 
 export default router;
