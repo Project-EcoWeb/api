@@ -83,8 +83,6 @@ class MaterialService{
 
         if (!(await MaterialValidator.checkUser({ id, user }))) throw new AppError('this material not is authorized', 403);
 
-        console.log('MATERIAL:  ', data);
-
         await MaterialRepository.updateById(id, data);
     }
 }
