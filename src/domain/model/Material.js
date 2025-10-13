@@ -34,8 +34,8 @@ const materialSchema = new Schema({
     },
     status: {
         type: String,
-        enum: ['available', 'reserved', 'finished'],
-        default: 'available'
+        enum: ['Publicado', 'Pausado', 'Doado'],
+        default: 'Publicado'
     },
     removedBy: {
         type: Schema.Types.ObjectId,
