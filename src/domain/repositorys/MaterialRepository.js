@@ -1,8 +1,8 @@
 import Material from '../model/Material.js';
 
 class MaterialRepository {
-    static async findAll() {
-        return await Material.find().populate({ path: 'company', select: '-password' });
+    static async findAll(status='Publicado') {
+        return await Material.find({ status }).populate({ path: 'company', select: '-password' });
     }
     static async save(data) {
         return await Material.create(data);
