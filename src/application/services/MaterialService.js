@@ -64,7 +64,7 @@ class MaterialService{
 
         if (!(await MaterialValidator.isExists(data.id))) throw new AppError('material is not exists', 404);
 
-        if (!(await MaterialValidator.checkUser({ id: data.id, user: data.userId}))) throw new AppError('this material not is authorized', 403);
+        if (!(await MaterialValidator.checkUser({ id: data.id, user: data.user}))) throw new AppError('this material not is authorized', 403);
 
         await MaterialRepository.updateStatus({id: data.id, status: data.status});
     }
@@ -82,8 +82,6 @@ class MaterialService{
         if (!(await MaterialValidator.isExists(id))) throw new AppError('material is not exists', 404);
 
         if (!(await MaterialValidator.checkUser({ id, user }))) throw new AppError('this material not is authorized', 403);
-
-        console.log('MATERIAL:  ', data);
 
         await MaterialRepository.updateById(id, data);
     }
