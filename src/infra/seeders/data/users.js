@@ -9,4 +9,9 @@ export const users = [
         email: 'joao.pereira@example.com',
         password: 'password123',
     },
+    {
+        name: 'Ruan Oliveira',
+        email: 'user@testando.com',
+        password: 'admin',
+    },
 ];
