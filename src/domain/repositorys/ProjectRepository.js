@@ -13,8 +13,8 @@ class ProjectRepository{
         return await Project.find().sort({ date: -1}).limit(3);
     }
 
-    static async findByUser(userId) {
-        return await Project.find({ author: userId });
+    static async findByUser(user) {
+        return await Project.find({ user });
     }
 
     static async countProjectsByUser(userId) {
