@@ -18,11 +18,11 @@ class ProjectService{
         video,
         category,
         difficulty
-    }, autor){
+    }, user){
 
         const projectSaved = await ProjectRepository.save({
         title,
-        autor,
+        user,
         date,
         image,
         description,
