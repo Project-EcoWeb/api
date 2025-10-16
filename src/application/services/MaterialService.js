@@ -53,10 +53,6 @@ class MaterialService{
             throw new AppError('material not found', 404);
         }
 
-        if (material.company.id !== user) {
-            throw new AppError('unauthorized for view project');
-        }
-
         return material;
     }
 
