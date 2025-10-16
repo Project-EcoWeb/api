@@ -2,7 +2,7 @@ export const projects = [
     {
         title: 'Horta Vertical com Garrafas PET',
         description: 'Sistema de horta vertical usando garrafas PET recicladas. Ideal para pequenos espaços e cultivo de temperos.',
-        image: '/images/horta-vertical-pet.jpg',
+        image: 'https://hortasemquintal.com.br/wp-content/uploads/Horta-no-Chao-feita-com-Garrafa-Pet-1.jpg',
         materials: [
             'Garrafas PET Transparentes',
             'Terra adubada',
@@ -22,7 +22,7 @@ export const projects = [
     {
         title: 'Sofá de Pallets com Estofamento Sustentável',
         description: 'Criação de sofá rústico usando pallets e sobras de tecido. Confortável e ecologicamente correto.',
-        image: '/images/sofa-pallets.jpg',
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTcuySSGlgWSMx_bXLboOUBUb4ct26_7R3ZsQ&s',
         materials: [
             'Pallets de Madeira Usados',
             'Retalhos de tecido',
@@ -42,7 +42,7 @@ export const projects = [
     {
         title: 'Sistema Hidropônico com Tubos de PVC',
         description: 'Cultivo de hortaliças sem solo usando tubos de PVC reciclados. Sistema eficiente e de baixo custo.',
-        image: '/images/hidroponico-pvc.jpg',
+        image: 'https://in-outdoor.com.br/wp-content/uploads/2019/07/hidroponia-pvc.jpg',
         materials: [
             'Tubos de PVC 100mm',
             'Bombas de aquário',
@@ -62,7 +62,7 @@ export const projects = [
     {
         title: 'Playground com Pneus Reciclados',
         description: 'Área de recreação infantil usando pneus inservíveis. Seguro, criativo e sustentável.',
-        image: '/images/playground-pneus.jpg',
+        image: 'https://www.cosanpa.pa.gov.br/wp-content/uploads/2019/07/WhatsApp-Image-2019-07-23-at-09.48.20-e1563889161862.jpeg',
         materials: [
             'Pneus Inservíveis',
             'Cordas resistentes',
@@ -82,7 +82,7 @@ export const projects = [
     {
         title: 'Estufa com Telhas Recicladas',
         description: 'Construção de estufa para horta usando telhas de fibrocimento reaproveitadas.',
-        image: '/images/estufa-telhas.jpg',
+        image: 'https://preview.redd.it/my-upcycled-window-greenhouse-built-spring-22-v0-ktrnyzarymma1.jpg?width=640&crop=smart&auto=webp&s=938fdb4433828a574d50af2447726f0b0fd571ff',
         materials: [
             'Telhas de Fibrocimento',
             'Estrutura de madeira',

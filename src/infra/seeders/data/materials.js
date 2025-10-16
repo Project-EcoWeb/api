@@ -1,7 +1,7 @@
 export const materials = [
     {
         name: 'Garrafas PET Transparentes',
-        image: 'https://images.unsplash.com/photo-1604176354204-9268737828e4?w=500&h=300&fit=crop',
+        image: 'https://www.lupel.com.br/wp-content/uploads/2023/08/garrafa-frasco-300ml-pet-c-tampa-unidade-6535-1.webp',
         description: 'Garrafas PET limpas e transparentes, ideais para projetos de reciclagem criativa. Material durável e versátil.',
         location: 'Área de Triagem, Setor A',
         quantity: 200,
@@ -13,7 +13,7 @@ export const materials = [
     },
     {
         name: 'Pallets de Madeira Usados',
-        image: 'https://images.unsplash.com/photo-1586023492120-9ae8a83c449f?w=500&h=300&fit=crop',
+        image: 'https://cdn.b2blue.com/p/media/public/fotos/pallets_dupla_face.jpg',
         description: 'Pallets de madeira em bom estado, perfeitos para móveis rústicos e projetos de upcycling.',
         location: 'Pátio Externo, Área de Madeiras',
         quantity: 15,
@@ -25,7 +25,7 @@ export const materials = [
     },
     {
         name: 'Tubos de PVC 100mm',
-        image: 'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=500&h=300&fit=crop',
+        image: 'https://casamattos.fbitsstatic.net/img/p/tubo-de-pvc-esgoto-krona-serie-normal-branco-100mm-com-6m-70500/257009-3.jpg?w=370&h=370&v=202509121735&qs=ignore',
         description: 'Tubos de PVC de 100mm, restos de obra em perfeito estado. Excelente para projetos hidropônicos.',
         location: 'Galpão 2, Prateleira E',
         quantity: 8,
@@ -37,7 +37,7 @@ export const materials = [
     },
     {
         name: 'Pneus Inservíveis',
-        image: 'https://images.unsplash.com/photo-1619630957981-70f6dfa86379?w=500&h=300&fit=crop',
+        image: 'https://www.apucarana.pr.gov.br/site/wp-content/uploads/2022/05/PNEUSFOTO-EDSON-DENOBI-2-1-1024x627.jpg',
         description: 'Pneus de diversos tamanhos para projetos de reciclagem. Ideal para jardins e playgrounds.',
         location: 'Área Externa, Setor Pneus',
         quantity: 25,
@@ -49,7 +49,7 @@ export const materials = [
     },
     {
         name: 'Telhas de Fibrocimento',
-        image: 'https://images.unsplash.com/photo-1586023492120-9ae8a83c449f?w=500&h=300&fit=crop',
+        image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUNhUwWNVBzxVMGbUTX6YGiEDeITjzlr_81A&s',
         description: 'Telhas de fibrocimento em bom estado, removidas de reformas. Perfeitas para estufas e abrigos.',
         location: 'Galpão 1, Prateleira Superior',
         quantity: 30,
