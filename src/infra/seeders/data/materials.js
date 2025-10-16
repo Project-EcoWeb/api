@@ -7,9 +7,9 @@ export const materials = [
         quantity: 15,
         category: 'Pintura',
         unitOfMeasure: 'Lata',
-        instructions: 'Agitar bem antes de usar. Aplicar com rolo ou pincel.', 
+        instructions: 'Agitar bem antes de usar. Aplicar com rolo ou pincel.',
         status: 'Publicado',
-        company: '507f1f77bcf86cd799439011' 
+        company: '507f1f77bcf86cd799439011'
     },
     {
         name: 'Parafuso Phillips 5mm (Caixa com 100)',
@@ -18,10 +18,10 @@ export const materials = [
         location: 'Corredor 7, Prateleira C',
         quantity: 50,
         category: 'Ferro',
-        unitOfMeasure: 'Caixa', 
+        unitOfMeasure: 'Caixa',
         instructions: 'Usar chave Phillips adequada para fixação.',
         status: 'Publicado',
-        company: '507f1f77bcf86cd799439011' 
+        company: '507f1f77bcf86cd799439012'
     },
     {
         name: 'Lixa para Madeira Grão 120',
@@ -34,5 +34,17 @@ export const materials = [
         instructions: 'Usar com movimento uniforme na direção da fibra da madeira.',
         status: 'Publicado',
         company: '507f1f77bcf86cd799439011'
+    },
+    {
+        name: 'Cimento CP II 50kg',
+        image: 'https://exemplo.com/cimento.jpg',
+        description: 'Cimento Portland composto para construções em geral.',
+        location: 'Corredor 1, Prateleira D',
+        quantity: 25,
+        category: 'Cimento',
+        unitOfMeasure: 'Saco',
+        instructions: 'Misturar com areia e brita na proporção adequada.',
+        status: 'Publicado',
+        company: '507f1f77bcf86cd799439012'
     }
 ];
