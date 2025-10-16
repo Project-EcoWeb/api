@@ -38,6 +38,10 @@ const companySchema = new Schema({
         match: [/\S+@\S+\.\S+/, 'email in format invalid'],
         required: [true, 'email is required']
     },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
     responsibleName: String,
     logo: String,
     password: {
