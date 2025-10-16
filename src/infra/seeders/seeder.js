@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-
+dotenv.config();
 import User from '../../domain/model/User.js';
 import Project from '../../domain/model/Project.js';
 import Material from '../../domain/model/Material.js';
@@ -21,59 +21,76 @@ const importData = async () => {
         await User.deleteMany();
         await Company.deleteMany();
 
+        console.log('Dados antigos removidos...');
+
         const createdCompanies = await Company.insertMany(companies);
-        const company1 = createdCompanies[0];
-        const company2 = createdCompanies[1];
+        console.log(`${createdCompanies.length} companies criadas`);
 
         const createdUsers = await User.insertMany(users);
-        const user1 = createdUsers[0];
-        const user2 = createdUsers[1];
 
-        const sampleMaterials = materials.map(material => {
-            const company = material.category === 'Ferro' ? company2._id : company1._id;
+        const ruanUser = createdUsers.find(user => user.email === 'cop30@gmail.com');
+        const mariaUser = createdUsers.find(user => user.email === 'maria.silva@example.com');
+        const joaoUser = createdUsers.find(user => user.email === 'joao.pereira@example.com');
 
-            return {
-                ...material,
-                company
-            };
-        });
+        console.log(`${createdUsers.length} users criados`);
 
-        const createdMaterials = await Material.insertMany(sampleMaterials);
+        const createdMaterials = await Material.insertMany(materials);
+        console.log(`${createdMaterials.length} materiais criados`);
 
         const sampleProjects = projects.map((project, index) => {
-            const user = index === 0 ? user2._id : user1._id;
-            const projectMaterials = index === 0
-                ? createdMaterials.map(m => m._id)
-                : [createdMaterials[0]._id];
+            let user;
+
+            if (index === 0 || index === 2 || index === 4) {
+                user = ruanUser._id;
+            } else if (index === 1) {
+                user = mariaUser._id;
+            } else {
+                user = joaoUser._id;
+            }
 
             return {
                 ...project,
-                user,
-                materials: projectMaterials
+                user, 
             };
         });
 
         const createdProjects = await Project.insertMany(sampleProjects);
+        console.log(`🏗️ ${createdProjects.length} projetos sustentáveis criados`);
 
         const favoritesToCreate = [
-            { user: user1._id, onModel: 'Project', reference: createdProjects[0]._id },
-            { user: user1._id, onModel: 'Material', reference: createdMaterials[1]._id },
-            { user: user2._id, onModel: 'Project', reference: createdProjects[0]._id }
+            { user: ruanUser._id, onModel: 'Project', reference: createdProjects[0]._id },
+            { user: ruanUser._id, onModel: 'Project', reference: createdProjects[2]._id }, 
+            { user: ruanUser._id, onModel: 'Project', reference: createdProjects[4]._id }, 
+
+            { user: ruanUser._id, onModel: 'Material', reference: createdMaterials[0]._id }, 
+            { user: ruanUser._id, onModel: 'Material', reference: createdMaterials[2]._id },
+
+            { user: mariaUser._id, onModel: 'Project', reference: createdProjects[1]._id },
+            { user: joaoUser._id, onModel: 'Project', reference: createdProjects[3]._id }, 
         ];
 
         await Favorite.insertMany(favoritesToCreate);
 
-        console.log('Database seeded successfully!');
-        console.log(`${createdCompanies.length} companies created`);
-        console.log(`${createdUsers.length} users created`);
-        console.log(`${createdMaterials.length} materials created`);
-        console.log(`${createdProjects.length} projects created`);
-        console.log(` ${favoritesToCreate.length} favorites created`);
+
+        const ruanProjects = createdProjects.filter(project =>
+            project.user.toString() === ruanUser._id.toString()
+        );
+
+        ruanProjects.forEach((project, index) => {
+            console.log(`${index + 1}. ${project.title} (${project.difficulty})`);
+        });
+
+        console.log('\n RESUMO GERAL:');
+        console.log(`Companies: ${createdCompanies.length}`);
+        console.log(`Users: ${createdUsers.length}`);
+        console.log(`Materiais: ${createdMaterials.length}`);
+        console.log(`Projetos: ${createdProjects.length}`);
+        console.log(`Favoritos: ${favoritesToCreate.length}`);
 
         process.exit();
 
     } catch (error) {
-        console.error(` Erro: ${error.message}`);
+        console.error(`Erro no seeding: ${error.message}`);
         process.exit(1);
     }
 };
@@ -84,12 +101,12 @@ const destroyData = async () => {
         await Project.deleteMany();
         await Material.deleteMany();
         await User.deleteMany();
-        await Company.deleteMany(); 
+        await Company.deleteMany();
 
-        console.log('All data destroyed!');
+        console.log('Todos os dados foram removidos!');
         process.exit();
     } catch (error) {
-        console.error(`Erro: ${error.message}`);
+        console.error(`Erro ao destruir dados: ${error.message}`);
         process.exit(1);
     }
 };
