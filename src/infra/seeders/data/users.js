@@ -7,7 +7,7 @@ async function encodePassword(hash) {
 
 export const users = [
     {
-        name: 'Ruan Oliveira',
+        name: 'COP30',
         email: 'cop30@gmail.com',
         password: await encodePassword('admin'),
         avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8YPQEhQCjYMivaRcMJqhPm2vN_qQ5M2DdLx4Ofw_bMLLMrA4LAGngRyehMSGyUyoRVoE&usqp=CAU'
