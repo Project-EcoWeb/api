@@ -7,7 +7,7 @@ export const materials = [
         quantity: 200,
         category: 'Plástico',
         unitOfMeasure: 'Unidades',
-        instructions: 'Lavar bem e remover rótulos antes do uso. Armazenar em local seco.',
+        instructions: 'Ir na Secão de materiais e falar com o colaborador gustavo',
         status: 'Publicado',
         company: '661f1f77bcf86cd799439013'
     },
@@ -19,7 +19,7 @@ export const materials = [
         quantity: 15,
         category: 'Madeira',
         unitOfMeasure: 'Unidades',
-        instructions: 'Lixar e verificar pregos soltos antes do uso. Ideal para decoração.',
+        instructions: 'Falar com o responsável, ou ir pela manhã no local indicado',
         status: 'Publicado',
         company: '661f1f77bcf86cd799439013'
     },
@@ -31,7 +31,7 @@ export const materials = [
         quantity: 8,
         category: 'PVC',
         unitOfMeasure: 'Metros',
-        instructions: 'Cortar com serra específica para PVC. Usar cola apropriada para junções.',
+        instructions: 'Entrar em contato com o departamento de materiais',
         status: 'Publicado',
         company: '507f1f77bcf86cd799439011'
     },
@@ -43,7 +43,7 @@ export const materials = [
         quantity: 25,
         category: 'Borracha',
         unitOfMeasure: 'Unidades',
-        instructions: 'Limpar bem e verificar integridade. Perfurados para evitar acúmulo de água.',
+        instructions: 'Ir ao local indicado e falar com responsável pela logistica',
         status: 'Publicado',
         company: '661f1f77bcf86cd799439013'
     },
@@ -55,7 +55,7 @@ export const materials = [
         quantity: 30,
         category: 'Fibrocimento',
         unitOfMeasure: 'Unidades',
-        instructions: 'Manusear com luvas. Cortar com disco específico para fibrocimento.',
+        instructions: 'Comparecer ao estabelecimento indicado, ou entrar em contato com o responsável via telefone',
         status: 'Publicado',
         company: '507f1f77bcf86cd799439012' 
     }

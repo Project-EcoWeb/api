@@ -1,4 +1,9 @@
 import mongoose from 'mongoose';
+import bcrypt from "bcryptjs";
+
+async function encodePassword(hash) {
+    return await bcrypt.hash(hash, 8);
+}
 
 export const companies = [
     {
@@ -11,7 +16,7 @@ export const companies = [
         email: 'contato@constrular.com.br',
         responsibleName: 'Carlos Silva',
         logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjvcG-gn02rCni4P8Y3vTvjsI7UTg0jq3D1w&s',
-        password: 'admin',
+        password: encodePassword('admin'),
         isVerified: false
     },
     {
@@ -24,7 +29,7 @@ export const companies = [
         email: 'vendas@ferreiraecia.com.br',
         responsibleName: 'Ana Ferreira',
         logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb64fuklslXVsWZiBEobDTWCTKgZh-NBUOOA&s',
-        password: 'Senha123@',
+        password: encodePassword('Senha123@'),
         isVerified: true
     },
     {
@@ -34,10 +39,10 @@ export const companies = [
         phone: '95992893421',
         location: 'Rua General Penha Brasil, nº 1011, bairro São Francisco',
         cep: '69305130',
-        email: 'boavista@gmail.com',
+        email: 'prefeitura@gmail.com',
         responsibleName: 'Arthur Henrique Brandão Machado.',
         logo: 'https://assets-pmbv.s3.sa-east-1.amazonaws.com/logo_pmbv.png',
-        password: 'admin',
+        password: encodePassword('admin'),
         isVerified: true
     }
 ];
