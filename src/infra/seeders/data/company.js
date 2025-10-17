@@ -16,7 +16,7 @@ export const companies = [
         email: 'contato@constrular.com.br',
         responsibleName: 'Carlos Silva',
         logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjvcG-gn02rCni4P8Y3vTvjsI7UTg0jq3D1w&s',
-        password: encodePassword('admin'),
+        password: await encodePassword('admin'),
         isVerified: false
     },
     {
@@ -29,7 +29,7 @@ export const companies = [
         email: 'vendas@ferreiraecia.com.br',
         responsibleName: 'Ana Ferreira',
         logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb64fuklslXVsWZiBEobDTWCTKgZh-NBUOOA&s',
-        password: encodePassword('Senha123@'),
+        password: await encodePassword('Senha123@'),
         isVerified: true
     },
     {
@@ -42,7 +42,7 @@ export const companies = [
         email: 'prefeitura@gmail.com',
         responsibleName: 'Arthur Henrique Brandão Machado.',
         logo: 'https://assets-pmbv.s3.sa-east-1.amazonaws.com/logo_pmbv.png',
-        password: encodePassword('admin'),
+        password: await encodePassword('admin'),
         isVerified: true
     }
 ];
