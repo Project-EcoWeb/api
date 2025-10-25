@@ -19,7 +19,7 @@ class UserService{
         await UserRepository.update({ id, user });
     }
 
-    static async findById(id, user) {
+    static async findById(id) {
         if (!(await UserValidator.isExists(id))) {
             throw new AppError('user not found', 404);
         }

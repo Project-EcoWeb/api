@@ -11,5 +11,6 @@ router.get('/count-projects', ProjectController.countProjectsByUser);
 router.get('/count-favorites', ProjectController.countFavoritesByUser);
 router.patch('/', UserController.update);
 router.get('/me/profile', UserController.getMeProfile);
+router.get('/:id/profile', UserController.getProfile);
 
 export default router;
