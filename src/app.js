@@ -13,6 +13,7 @@ import HomeController from "./http/controllers/HomeController.js";
 import searchRoutes from './http/routes/searchRoutes.js';
 import swaggerSpec from "./shared/config/swaggerConfig.js";
 import feedbackRoutes from './http/routes/feedbackRoutes.js';
+import companyRoutes from './http/routes/companyRoutes.js';
 const app = express();
 
 app.use(pinoHttp({ logger }));
@@ -35,4 +36,5 @@ app.get('/home', HomeController.home);
 app.use('/users', userRoutes);
 app.use('/search', searchRoutes);
 app.use('/feedbacks', feedbackRoutes);
+app.use('/institutions', companyRoutes);
 export { app };
