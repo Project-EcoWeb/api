@@ -3,7 +3,7 @@ import CompanyValidator from '../validations/CompanyValidator.js';
 import MaterialService from './MaterialService.js';
 
 class CompanyService{
-    static async getMeProfile(id) {
+    static async getProfileById(id) {
         if (!(await CompanyValidator.isExists(id))) {
             throw new AppError('User not exists', 404);
         }
