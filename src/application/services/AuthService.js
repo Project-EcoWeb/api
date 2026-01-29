@@ -21,6 +21,10 @@ class AuthService{
     }
     static async login(data){
 
+        if (!data.email || !data.password) {
+            throw new AppError('fields incompleted/empty', 400);
+        }
+
         if(!(await UserValidator.isExistsByEmail(data.email))){
             throw new AppError('user not exists or email incorrect', 404);
         }
