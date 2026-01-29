@@ -21,10 +21,6 @@ class AuthService{
     }
     static async login(data){
 
-        if (!data.email || !data.password) {
-            throw new AppError('fields incompleted/empty', 400);
-        }
-
         if(!(await UserValidator.isExistsByEmail(data.email))){
             throw new AppError('user not exists or email incorrect', 404);
         }
@@ -32,7 +28,7 @@ class AuthService{
         const user = await UserRespository.findByEmailAndComparePassword({ email: data.email, password: data.password});
         
         if (!user){
-            throw new AppError('password incorrect', 400);
+            throw new AppError('password incorrect', 401);
         }
 
         const { id, name, email } = user;
