@@ -28,7 +28,7 @@ class AuthService{
         const user = await UserRespository.findByEmailAndComparePassword({ email: data.email, password: data.password});
         
         if (!user){
-            throw new AppError('password incorrect', 400);
+            throw new AppError('password incorrect', 401);
         }
 
         const { id, name, email } = user;
