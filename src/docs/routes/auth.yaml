@@ -39,6 +39,15 @@ paths:
       tags:
         - Autenticação
       summary: Realiza o login de um usuário.
+      parameters:
+        - name: q
+          in: query
+          description: Parâmetro de comportamento.
+          required: false
+          schema:
+            type: string
+            enum:
+              - company
       description: Autentica um usuário com e-mail e senha, retornando os dados do usuário e um token JWT.
       requestBody:
         description: Credenciais para autenticação.
