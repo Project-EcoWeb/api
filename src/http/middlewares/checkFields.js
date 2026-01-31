@@ -1,5 +1,10 @@
 export default async (req, res, next) => {
 
+
+    if (req.query.q === 'company') {
+        return next();
+    }
+
     const fields = ['email', 'password'];
 
     fields.forEach((field) => {
