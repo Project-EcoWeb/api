@@ -54,13 +54,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LoginSuccessResponse' 
-        '400':
+        '401':
           description: Senha incorreta.
           content:
             application/json:
               schema:
                 example:
                   message: 'password incorrect'
+        '400':
+          description: Requisição inválida (campos faltando, campos inválidos).
+          content:
+            application/json:
+              schema:
+                example:
+                  message: 'missing ${field} field'
         '404':
           description: Usuário não encontrado.
           content:
