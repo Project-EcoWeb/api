@@ -48,7 +48,7 @@ class AuthService{
         const company = await CompanyRepository.findOneAndComparePassword({ emailOrCnpj: data.emailOrCnpj, password: data.password });
 
         if (!company) {
-            throw new AppError('password incorrect', 400);
+            throw new AppError('password incorrect', 401);
         }
 
         const { id, name, logo } = company;

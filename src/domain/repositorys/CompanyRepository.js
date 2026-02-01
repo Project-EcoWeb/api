@@ -1,4 +1,5 @@
 import Company from '../model/Company.js';
+import bcrypt from "bcryptjs";
 
 class CompanyRepository {
     static async create(data) {
@@ -16,7 +17,7 @@ class CompanyRepository {
                 }, {
                     cnpj: arguments[0]
                 }]
-            });
+            }).exec();
         }
 
         if (arguments.length === 2) {
@@ -26,23 +27,21 @@ class CompanyRepository {
                 }, {
                     cnpj: arguments[1]
                 }]
-            })
+            }).exec();
         }
     }
     static async findOneAndComparePassword({ emailOrCnpj, password }) {
-        const company = await Company.findOne({
+        const {_doc: company} = await Company.findOne({
             $or: [{
                 email: emailOrCnpj
             }, {
                 cnpj: emailOrCnpj
             }]
-        }).select('+password');
+        }).select('+password').exec();;
         
-        return company.comparePassword(password) ? {
-                id: company.id,
-                name: company.name,
-                logo: company.logo
-            } : false;
+        if (!this.comparePassword(password, company.password)) return null;
+
+        return company;
     }
     static async findByEmail(email) {
         return await Company.findOne({ email });
@@ -52,6 +51,9 @@ class CompanyRepository {
     }
     static async findByName(name) {
         return await Company.findOne({ name });
+    }
+    static comparePassword(password, hash) {
+        return bcrypt.compareSync(password, hash);
     }
 }
 
