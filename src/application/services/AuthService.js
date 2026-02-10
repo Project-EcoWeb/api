@@ -51,11 +51,10 @@ class AuthService{
             throw new AppError('password incorrect', 401);
         }
 
-        const { id, name, logo } = company;
-
+        const { _id, name, logo } = company;
         return {
-            company: { id, name, logo },
-            token: jwt.sign({ id }, authConfig.secret, { expiresIn: authConfig.expiresIn })
+            company: { id: _id.toString(), name, logo },
+            token: jwt.sign({ id: _id.toString() }, authConfig.secret, { expiresIn: authConfig.expiresIn })
         };
     }
     static async registerCompany({ name, location, cnpj, phone, cep, email, responsibleName, logo, password }) {
