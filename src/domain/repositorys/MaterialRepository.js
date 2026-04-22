@@ -36,6 +36,18 @@ class MaterialRepository {
     static async updateById(id, material) {
         Material.findByIdAndUpdate(id, material, { runValidators: true }).exec();
     }
+
+    static async findByNameAndStatusAndUser(name, status, user) {
+        return await Material.find({
+            name: { $regex: name, $options: 'i' },
+            status: status,
+            company: user
+        }).select('-user');
+    }
+
+    static async findByNameAndUser(name, user) {
+        return await Material.find({ name: { $regex: name, $options: 'i' }, company: user }).select('-user');
+    }
 }
 
 export default MaterialRepository;

@@ -81,6 +81,20 @@ class MaterialService{
 
         await MaterialRepository.updateById(id, data);
     }
+
+    static async findByNameOrStatus(name, status='default', user) {
+
+        if ((!name && !status) || (name && name.trim() === '') || (status && !['Publicado', 'Pausado', 'Doado', 'default'].includes(status))) {
+            throw new AppError('name or status is required/invalid', 400);
+        }
+        
+        if (status === 'default') {
+            return await MaterialRepository.findByNameAndUser(name, user);
+        }
+
+        const materials = await MaterialRepository.findByNameAndStatusAndUser(name, status, user);
+        return materials;
+    }
 }
 
 export default MaterialService;
