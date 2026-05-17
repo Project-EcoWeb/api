@@ -6,7 +6,7 @@ const router = Router();
 router.get('/', MaterialController.findAll);
 router.post('/', MaterialController.save);
 router.get('/me', MaterialController.findByUser);
-router.post('/favorites', FavoriteController.save)
+router.post('/favorites', FavoriteController.save);
 router.get('/search', MaterialController.findByNameOrStatus);
 router.get('/:id', MaterialController.getById);
 router.patch('/:id/update-status', MaterialController.updateStatus);

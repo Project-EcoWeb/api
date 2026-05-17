@@ -72,6 +72,7 @@ class MaterialController{
             const { name, status } = req.query;
             const user = req.userId;
             const materials = await MaterialService.findByNameOrStatus(name, status, user);
+            logger.info(`Materials found: ${materials.length}`);
             return res.json(materials);
         } catch (error) {
             return res.status(error.statusCode || 500).json({ message: error.message });
