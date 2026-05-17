@@ -48,6 +48,10 @@ class MaterialRepository {
     static async findByNameAndUser(name, user) {
         return await Material.find({ name: { $regex: name, $options: 'i' }, company: user }).select('-user');
     }
+
+    static async findByStatusAndUser(status, user) {
+        return await Material.find({ status, company: user }).select('-user');
+    }
 }
 
 export default MaterialRepository;

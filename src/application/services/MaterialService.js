@@ -16,7 +16,7 @@ class MaterialService{
         quantity,
         category,
         unitOfMeasure,
-        instructions
+        instructions    
     }, user){
 
         await MaterialRepository.save({
@@ -82,14 +82,18 @@ class MaterialService{
         await MaterialRepository.updateById(id, data);
     }
 
-    static async findByNameOrStatus(name, status='default', user) {
+    static async findByNameOrStatus(name, status='all', user) {
 
-        if ((!name && !status) || (name && name.trim() === '') || (status && !['Publicado', 'Pausado', 'Doado', 'default'].includes(status))) {
-            throw new AppError('name or status is required/invalid', 400);
+        if (status && !['publicado', 'pausado', 'doado', 'all'].includes(status)) {
+            throw new AppError('input status invalid', 400);
         }
         
-        if (status === 'default') {
+        if (status === 'all') {
             return await MaterialRepository.findByNameAndUser(name, user);
+        }
+
+        if (!name) {
+            return await MaterialRepository.findByStatusAndUser(status, user);
         }
 
         const materials = await MaterialRepository.findByNameAndStatusAndUser(name, status, user);
