@@ -109,6 +109,16 @@ ECOWEB-api/
 
 Você pode utilizar ferramentas como o [Postman](https://www.postman.com/) ou [Insomnia](https://insomnia.rest/) para testar as rotas da API.
 
+### Testes unitários
+
+O projeto usa o executor nativo do Node.js (`node:test`), sem dependências extras. Isso mantém os testes unitários rápidos e independentes de MongoDB ou de serviços externos.
+
+```bash
+npm test
+```
+
+Os testes ficam em `test/`, espelhando a estrutura de `src/`. A etapa inicial cobre middlewares, schemas, validadores e regras dos services, com repositórios simulados. Para os próximos serviços, prefira injetar repositórios/validadores ou isolá-los por adaptadores, para que seus comportamentos possam ser testados sem conexão com o banco.
+
 ---
 
 ## ✅ Próximos Passos
