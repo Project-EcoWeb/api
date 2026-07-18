@@ -8,7 +8,7 @@ export const materials = [
         category: 'Plástico',
         unitOfMeasure: 'Unidades',
         instructions: 'Ir na Secão de materiais e falar com o colaborador gustavo',
-        status: 'Publicado',
+        status: 'publicado',
         company: '661f1f77bcf86cd799439013'
     },
     {
@@ -20,7 +20,7 @@ export const materials = [
         category: 'Madeira',
         unitOfMeasure: 'Unidades',
         instructions: 'Falar com o responsável, ou ir pela manhã no local indicado',
-        status: 'Publicado',
+        status: 'publicado',
         company: '661f1f77bcf86cd799439013'
     },
     {
@@ -32,7 +32,7 @@ export const materials = [
         category: 'PVC',
         unitOfMeasure: 'Metros',
         instructions: 'Entrar em contato com o departamento de materiais',
-        status: 'Publicado',
+        status: 'publicado',
         company: '507f1f77bcf86cd799439011'
     },
     {
@@ -44,7 +44,7 @@ export const materials = [
         category: 'Borracha',
         unitOfMeasure: 'Unidades',
         instructions: 'Ir ao local indicado e falar com responsável pela logistica',
-        status: 'Publicado',
+        status: 'publicado',
         company: '661f1f77bcf86cd799439013'
     },
     {
@@ -56,7 +56,7 @@ export const materials = [
         category: 'Fibrocimento',
         unitOfMeasure: 'Unidades',
         instructions: 'Comparecer ao estabelecimento indicado, ou entrar em contato com o responsável via telefone',
-        status: 'Publicado',
+        status: 'publicado',
         company: '507f1f77bcf86cd799439012' 
     }
 ];
