@@ -35,7 +35,7 @@ Crie um arquivo `.env` com as seguintes variáveis:
 
 ```env
 PORT_SERVER=3000
-MONGODB_URI=seu_link_do_mongodb
+MONGODB_URL=seu_link_do_mongodb
 ```
 
 Inicie o servidor em modo desenvolvimento:
