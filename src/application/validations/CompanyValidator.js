@@ -12,7 +12,7 @@ class CompanyValidator {
         }
     }
     static async isExistsByName(name) {
-        return !(await CompanyRepository.findByEmail(name)) ? false : true;
+        return !(await CompanyRepository.findByName(name)) ? false : true;
     }
 }
 
