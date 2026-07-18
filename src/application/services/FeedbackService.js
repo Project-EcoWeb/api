@@ -1,4 +1,4 @@
-import FeedbackRepository from "../../domain/repositorys/FeedbackRepository";
+import FeedbackRepository from "../../domain/repositories/FeedbackRepository";
 import AppError from "../../shared/error/AppError";
 import MaterialValidator from "../validations/MaterialValidator.js";
 import UserValidator from "../validations/UserValidator.js";

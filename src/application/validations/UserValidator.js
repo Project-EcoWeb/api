@@ -1,4 +1,4 @@
-import UserRepository from '../../domain/repositorys/UserRespository.js'
+import UserRepository from '../../domain/repositories/UserRespository.js'
 
 class UserValidator{
     static async isExists(id) {

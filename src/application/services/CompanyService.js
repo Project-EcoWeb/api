@@ -1,4 +1,4 @@
-import CompanyRepository from '../../domain/repositorys/CompanyRepository.js';
+import CompanyRepository from '../../domain/repositories/CompanyRepository.js';
 import CompanyValidator from '../validations/CompanyValidator.js';
 import MaterialService from './MaterialService.js';
 import AppError from "../../shared/error/AppError.js";

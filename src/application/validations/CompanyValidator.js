@@ -1,4 +1,4 @@
-import CompanyRepository from '../../domain/repositorys/CompanyRepository.js';
+import CompanyRepository from '../../domain/repositories/CompanyRepository.js';
 
 class CompanyValidator {
     static async isExists(id) {

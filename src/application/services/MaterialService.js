@@ -1,4 +1,4 @@
-import MaterialRepository from "../../domain/repositorys/MaterialRepository.js";
+import MaterialRepository from "../../domain/repositories/MaterialRepository.js";
 import AppError from '../../shared/error/AppError.js';
 import MaterialValidator from "../validations/MaterialValidator.js";
 import CompanyValidator from "../validations/CompanyValidator.js";

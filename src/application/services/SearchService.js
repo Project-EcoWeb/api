@@ -1,5 +1,5 @@
-import MaterialRepository from "../../domain/repositorys/MaterialRepository.js";
-import ProjectRepository from "../../domain/repositorys/ProjectRepository.js";
+import MaterialRepository from "../../domain/repositories/MaterialRepository.js";
+import ProjectRepository from "../../domain/repositories/ProjectRepository.js";
 import AppError from "../../shared/error/AppError.js";
 
 class SearchService{
