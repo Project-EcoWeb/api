@@ -1,5 +1,5 @@
-import FeedbackRepository from "../../domain/repositories/FeedbackRepository";
-import AppError from "../../shared/error/AppError";
+import FeedbackRepository from "../../domain/repositories/FeedbackRepository.js";
+import AppError from "../../shared/error/AppError.js";
 import MaterialValidator from "../validations/MaterialValidator.js";
 import UserValidator from "../validations/UserValidator.js";
 import MaterialService from "../services/MaterialService.js";
@@ -20,7 +20,7 @@ class FeedbackService{
 
         const { material, supplier } = await FeedbackRepository.create(data);
 
-        await MaterialService.updateStatus({ id: material, user: supplier, status: "finished" });
+        await MaterialService.updateStatus({ id: material, user: supplier, status: "doado" });
     }
 }
 
