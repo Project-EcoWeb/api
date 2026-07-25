@@ -19,6 +19,33 @@ test('CompanyController.getMeProfile usa o usuário autenticado', async (t) => {
     assert.deepEqual(res.body, { id: 'company-1' });
 });
 
+test('CompanyController.update responde 204 após atualizar o perfil autenticado', async (t) => {
+    let received;
+    t.mock.method(CompanyService, 'update', async (data) => { received = data; });
+    const res = response();
+
+    await CompanyController.update({
+        userId: 'company-1',
+        body: { name: 'Eco Ltda', email: 'eco@example.com', password: 'ignored' }
+    }, res);
+
+    assert.deepEqual(received, {
+        id: 'company-1',
+        company: {
+            name: 'Eco Ltda',
+            cnpj: undefined,
+            phone: undefined,
+            location: undefined,
+            cep: undefined,
+            email: 'eco@example.com',
+            responsibleName: undefined,
+            logo: undefined
+        }
+    });
+    assert.equal(res.statusCode, 204);
+    assert.equal(res.ended, true);
+});
+
 test('FavoriteController.save associa o favorito ao usuário autenticado', async (t) => {
     let received;
     t.mock.method(FavoriteService, 'save', async (data) => { received = data; });

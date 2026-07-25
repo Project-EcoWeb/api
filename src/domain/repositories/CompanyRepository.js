@@ -52,6 +52,13 @@ class CompanyRepository {
     static async findByName(name) {
         return await Company.findOne({ name });
     }
+    static async update({ id, company }) {
+        return await Company.findByIdAndUpdate(
+            id,
+            { $set: company },
+            { new: true, runValidators: true, context: 'query' }
+        );
+    }
     static comparePassword(password, hash) {
         return bcrypt.compareSync(password, hash);
     }
