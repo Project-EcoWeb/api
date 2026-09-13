@@ -1,0 +1,39 @@
+paths:
+  /:
+    get:
+      tags: [Sistema]
+      operationId: healthCheck
+      summary: Verifica se o servidor HTTP está ativo
+      description: |
+        Health check público e leve. Confirma que o processo Express está respondendo,
+        mas não executa uma verificação explícita da conexão com o MongoDB.
+      security: []
+      responses:
+        '200':
+          description: Processo HTTP ativo.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+              example:
+                isActive: true
+
+  /home:
+    get:
+      tags: [Sistema]
+      operationId: getHomeContent
+      summary: Retorna o conteúdo de destaque da página inicial
+      description: |
+        Agrega até três projetos e até três materiais consultados como os mais
+        recentes. A operação exige autenticação e faz duas consultas independentes.
+      responses:
+        '200':
+          description: Conteúdo inicial carregado; listas podem estar vazias.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HomeResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'

@@ -1,0 +1,42 @@
+paths:
+  /feedbacks:
+    post:
+      tags: [Feedbacks]
+      operationId: createFeedback
+      summary: Registra o feedback de uma doação
+      description: |
+        Cria um feedback que relaciona o material, a instituição fornecedora e o
+        usuário recebedor. Depois do registro, o material é marcado como `Doado`.
+        O `supplier` precisa ser a instituição proprietária do material e o
+        `receiver` precisa corresponder a um usuário existente.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFeedbackRequest'
+            example:
+              material: '507f1f77bcf86cd799439011'
+              supplier: '507f1f77bcf86cd799439012'
+              receiver: '507f1f77bcf86cd799439013'
+              text: 'Material entregue conforme combinado e em ótimo estado.'
+      responses:
+        '201':
+          description: Feedback criado e material marcado como doado. A resposta não possui corpo.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Material ou usuário recebedor não existe, ou a instituição não é proprietária.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                materialNotFound:
+                  value: { message: 'material is not exists' }
+                receiverNotFound:
+                  value: { message: 'user not exists' }
+                supplierNotAuthorized:
+                  value: { message: 'this material not is authorized' }
+        '500':
+          $ref: '#/components/responses/InternalServerError'

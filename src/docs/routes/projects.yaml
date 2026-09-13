@@ -1,0 +1,141 @@
+paths:
+  /projects:
+    get:
+      tags: [Projetos]
+      operationId: listProjects
+      summary: Lista todos os projetos
+      description: |
+        Retorna todos os projetos cadastrados. O campo `user` vem populado com os
+        dados públicos do autor e nunca inclui a senha.
+      responses:
+        '200':
+          description: Lista completa de projetos; pode ser vazia.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags: [Projetos]
+      operationId: createProject
+      summary: Publica um novo projeto
+      description: |
+        Cria um projeto em nome do usuário identificado pelo JWT. O cliente não
+        deve enviar `user`, `_id`, datas ou `__v`; esses campos são definidos pelo servidor.
+      requestBody:
+        required: true
+        description: Conteúdo completo do projeto sustentável.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjectRequest'
+      responses:
+        '200':
+          description: Projeto criado. A implementação retorna o documento persistido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          description: Erro interno ou rejeição dos dados pelas validações do modelo.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'Project validation failed: difficulty: `Fácil` is not a valid enum value for path `difficulty`.'
+
+  /projects/me:
+    get:
+      tags: [Projetos]
+      operationId: listMyProjects
+      summary: Lista os projetos do usuário autenticado
+      description: Usa exclusivamente o ID contido no JWT e retorna os projetos cujo autor é esse usuário.
+      responses:
+        '200':
+          description: Projetos do usuário; a lista pode estar vazia.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: O ID contido no token não corresponde a um usuário existente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'User not exists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /projects/favorites:
+    post:
+      tags: [Favoritos]
+      operationId: favoriteFromProjects
+      summary: Adiciona um projeto ou material aos favoritos
+      description: |
+        Cria um favorito para o usuário identificado pelo JWT. Apesar de estar sob
+        `/projects`, o corpo é polimórfico e aceita `onModel=Project` ou
+        `onModel=Material`. A combinação usuário, tipo e referência é única.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFavoriteRequest'
+            example:
+              onModel: 'Project'
+              reference: '507f1f77bcf86cd799439012'
+      responses:
+        '200':
+          description: Favorito criado. A resposta não possui corpo.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          description: Corpo inválido, tipo não suportado, ID malformado ou favorito duplicado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'E11000 duplicate key error collection: favorites'
+
+  /projects/{id}:
+    get:
+      tags: [Projetos]
+      operationId: getProjectById
+      summary: Consulta os detalhes de um projeto
+      description: Retorna um projeto pelo ObjectId, com os dados públicos do autor populados em `user`.
+      parameters:
+        - $ref: '#/components/parameters/MongoIdPath'
+      responses:
+        '200':
+          description: Projeto encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Nenhum projeto corresponde ao ID informado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'project not found'
+        '500':
+          $ref: '#/components/responses/InternalServerError'

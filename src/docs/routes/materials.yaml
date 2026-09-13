@@ -1,0 +1,256 @@
+paths:
+  /materials:
+    get:
+      tags: [Materiais]
+      operationId: listPublishedMaterials
+      summary: Lista os materiais publicados
+      description: |
+        Retorna somente materiais com status `Publicado`. O campo `company` vem
+        populado com os dados públicos da instituição, sem a senha.
+      responses:
+        '200':
+          description: Materiais publicados; a lista pode estar vazia.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags: [Materiais]
+      operationId: createMaterial
+      summary: Publica um novo material
+      description: |
+        Cria um material para a instituição identificada pelo JWT. O campo
+        `company` é obtido do token e o status inicial é `Publicado`; não envie
+        esses campos no corpo.
+      requestBody:
+        required: true
+        description: Dados do material disponível para reutilização.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMaterialRequest'
+      responses:
+        '201':
+          description: Material criado. A resposta não possui corpo.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          description: Falha de validação do modelo ou erro interno.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'Material validation failed: quantity: one quantity is required'
+
+  /materials/me:
+    get:
+      tags: [Materiais]
+      operationId: listMyMaterials
+      summary: Lista os materiais da instituição autenticada
+      description: |
+        Retorna todos os materiais vinculados ao ID do JWT, independentemente do
+        status. Esta operação espera que o token pertença a uma instituição.
+      responses:
+        '200':
+          description: Materiais da instituição; a lista pode estar vazia.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: O ID contido no token não corresponde a uma instituição existente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'User not exists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /materials/favorites:
+    post:
+      tags: [Favoritos]
+      operationId: favoriteFromMaterials
+      summary: Adiciona um material ou projeto aos favoritos
+      description: |
+        Cria um favorito para o usuário identificado pelo JWT. Apesar de estar sob
+        `/materials`, o corpo aceita tanto `Material` quanto `Project`. A combinação
+        usuário, tipo e referência só pode existir uma vez.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFavoriteRequest'
+            example:
+              onModel: 'Material'
+              reference: '507f1f77bcf86cd799439012'
+      responses:
+        '200':
+          description: Favorito criado. A resposta não possui corpo.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          description: Corpo inválido, referência malformada, enumeração não suportada ou favorito duplicado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /materials/{id}:
+    get:
+      tags: [Materiais]
+      operationId: getMaterialById
+      summary: Consulta os detalhes de um material
+      description: Retorna o material pelo ObjectId com os dados públicos da instituição populados em `company`.
+      parameters:
+        - $ref: '#/components/parameters/MongoIdPath'
+      responses:
+        '200':
+          description: Material encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Material'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Nenhum material corresponde ao ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'material not found'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    patch:
+      tags: [Materiais]
+      operationId: updateMaterial
+      summary: Atualiza os dados de um material
+      description: |
+        Atualiza parcialmente o material. Somente a instituição proprietária,
+        identificada pelo JWT, pode executar a operação. Para alterar o status,
+        use `PATCH /materials/{id}/update-status`.
+      parameters:
+        - $ref: '#/components/parameters/MongoIdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMaterialRequest'
+      responses:
+        '200':
+          description: Material atualizado. A resposta não possui corpo.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: A instituição autenticada não é proprietária do material.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'this material not is authorized'
+        '404':
+          description: Material não encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'material is not exists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    delete:
+      tags: [Materiais]
+      operationId: deleteMaterial
+      summary: Exclui um material
+      description: |
+        Exclui permanentemente o material. Somente a instituição proprietária,
+        identificada pelo JWT, é autorizada a removê-lo.
+      parameters:
+        - $ref: '#/components/parameters/MongoIdPath'
+      responses:
+        '200':
+          description: Material excluído. A resposta não possui corpo.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: A instituição autenticada não é proprietária do material.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'this material not is authorized'
+        '404':
+          description: Material não encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'material is not exists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /materials/{id}/update-status:
+    patch:
+      tags: [Materiais]
+      operationId: updateMaterialStatus
+      summary: Altera o status de um material
+      description: |
+        Define o estado operacional do material. Somente a instituição proprietária
+        pode fazer a alteração. Os valores são sensíveis a maiúsculas e acentos.
+      parameters:
+        - $ref: '#/components/parameters/MongoIdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMaterialStatusRequest'
+            examples:
+              pause:
+                value: { status: 'Pausado' }
+              publish:
+                value: { status: 'Publicado' }
+              donated:
+                value: { status: 'Doado' }
+      responses:
+        '200':
+          description: Status alterado. A resposta não possui corpo.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: A instituição autenticada não é proprietária do material.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'this material not is authorized'
+        '404':
+          description: Material não encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'material is not exists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'

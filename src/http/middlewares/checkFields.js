@@ -1,4 +1,7 @@
 export default async (req, res, next) => {
+    const fields = req.query.q === 'company'
+        ? ['emailOrCnpj', 'password']
+        : ['email', 'password'];
 
 
     if (req.query.q === 'company') {

@@ -1,0 +1,58 @@
+paths:
+  /institutions/me/profile:
+    get:
+      tags: [Instituições]
+      operationId: getCurrentInstitutionProfile
+      summary: Obtém o perfil da instituição autenticada
+      description: |
+        Busca a instituição pelo ID contido no JWT e acrescenta todos os materiais
+        vinculados a ela, independentemente do status. A senha nunca é retornada.
+      responses:
+        '200':
+          description: Perfil da instituição e seus materiais.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyProfileResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Instituição do token não encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'User not exists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /institutions/{id}/profile:
+    get:
+      tags: [Instituições]
+      operationId: getInstitutionProfileById
+      summary: Obtém o perfil de uma instituição por ID
+      description: |
+        Retorna os dados públicos e todos os materiais da instituição indicada no
+        caminho. A operação exige JWT mesmo sendo uma consulta de perfil externo.
+      parameters:
+        - $ref: '#/components/parameters/MongoIdPath'
+      responses:
+        '200':
+          description: Perfil da instituição encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyProfileResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Instituição não encontrada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'User not exists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'

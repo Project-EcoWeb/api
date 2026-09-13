@@ -1,71 +1,183 @@
-tags:
-  - name: Autenticação
-    description: Endpoints para registro e login de usuários.
-
 paths:
   /auth/register:
     post:
-      tags:
-        - Autenticação
-      summary: Registra um novo usuário.
-      description: Cria uma nova conta de usuário no sistema.
+      tags: [Autenticação]
+      operationId: registerAccount
+      summary: Cadastra um usuário ou uma instituição
+      description: |
+        Cria uma conta de **usuário** quando `q` é omitido e uma conta de
+        **instituição** quando `q=company`.
+
+        A senha é recebida em texto puro e persistida somente após hash bcrypt.
+        O cadastro não inicia uma sessão: use `POST /auth/login` para obter o JWT.
+      security: []
+      parameters:
+        - name: q
+          in: query
+          required: false
+          description: Envie `company` para cadastrar uma instituição; omita para cadastrar um usuário.
+          schema:
+            type: string
+            enum: [company]
+          example: company
       requestBody:
-        description: Dados necessários para criar um novo usuário.
         required: true
+        description: O formato depende do parâmetro `q`.
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RegisterRequest' 
+              oneOf:
+                - $ref: '#/components/schemas/RegisterUserRequest'
+                - $ref: '#/components/schemas/RegisterCompanyRequest'
+            examples:
+              user:
+                summary: Cadastro de usuário (`q` omitido)
+                value:
+                  name: 'Maria Silva'
+                  email: 'maria.silva@example.com'
+                  password: 'SenhaSegura123!'
+              company:
+                summary: Cadastro de instituição (`q=company`)
+                value:
+                  name: 'Constrular Materiais de Construção'
+                  location: 'Rua das Construções, 123 - Centro, Boa Vista - RR'
+                  cnpj: '13.896.592/0001-13'
+                  phone: '95991203454'
+                  cep: '69305-130'
+                  email: 'contato@constrular.com.br'
+                  responsibleName: 'Carlos Silva'
+                  logo: 'https://example.com/images/constrular.png'
+                  password: 'SenhaSegura123!'
       responses:
         '201':
-          description: Usuário criado com sucesso. A resposta não possui corpo.
+          description: Conta criada com sucesso. A resposta não possui corpo.
         '400':
-          description: Requisição inválida (campos faltando).
-          content:
-            application/json:
-              schema:
-                example:
-                  message: 'fields incompleted'
-        '409':
-          description: Conflito (o e-mail já está em uso).
-          content:
-            application/json:
-              schema:
-                example:
-                  message: 'user with this email already registered'
-
-  /auth/login:
-    post:
-      tags:
-        - Autenticação
-      summary: Realiza o login de um usuário.
-      description: Autentica um usuário com e-mail e senha, retornando os dados do usuário e um token JWT.
-      requestBody:
-        description: Credenciais para autenticação.
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LoginRequest' 
-      responses:
-        '200':
-          description: Login bem-sucedido.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LoginSuccessResponse' 
-        '400':
-          description: Senha incorreta.
-          content:
-            application/json:
-              schema:
-                example:
-                  message: 'password incorrect'
-        '404':
-          description: Usuário não encontrado.
+          description: Campos obrigatórios do usuário ausentes ou dados rejeitados.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-                example:
-                  message: 'user not exists'
+              example:
+                message: 'fields incompleted'
+        '403':
+          description: Nome, e-mail ou CNPJ da instituição já cadastrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                nameInUse:
+                  value: { message: 'company with name is registred' }
+                documentInUse:
+                  value: { message: 'email or cnpj is registred' }
+        '409':
+          description: E-mail do usuário já cadastrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'user with this email already registered'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/login:
+    post:
+      tags: [Autenticação]
+      operationId: loginAccount
+      summary: Autentica um usuário ou uma instituição
+      description: |
+        Autentica um **usuário** quando `q` é omitido ou uma **instituição** quando
+        `q=company`. Em caso de sucesso retorna os dados essenciais da conta e um
+        JWT, que deve ser enviado nas demais operações como `Bearer <token>`.
+      security: []
+      parameters:
+        - name: q
+          in: query
+          required: false
+          description: Envie `company` para autenticar uma instituição; omita para autenticar um usuário.
+          schema:
+            type: string
+            enum: [company]
+          example: company
+      requestBody:
+        required: true
+        description: Credenciais compatíveis com o tipo de conta selecionado em `q`.
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/LoginUserRequest'
+                - $ref: '#/components/schemas/LoginCompanyRequest'
+            examples:
+              user:
+                summary: Login de usuário (`q` omitido)
+                value:
+                  email: 'maria.silva@example.com'
+                  password: 'SenhaSegura123!'
+              companyByEmail:
+                summary: Login de instituição por e-mail (`q=company`)
+                value:
+                  emailOrCnpj: 'contato@constrular.com.br'
+                  password: 'SenhaSegura123!'
+              companyByCnpj:
+                summary: Login de instituição por CNPJ (`q=company`)
+                value:
+                  emailOrCnpj: '13.896.592/0001-13'
+                  password: 'SenhaSegura123!'
+      responses:
+        '200':
+          description: Credenciais válidas e sessão criada.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/LoginUserResponse'
+                  - $ref: '#/components/schemas/LoginCompanyResponse'
+              examples:
+                user:
+                  value:
+                    user:
+                      id: '507f1f77bcf86cd799439011'
+                      name: 'Maria Silva'
+                      email: 'maria.silva@example.com'
+                    token: 'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjUwN2YxZjc3YmNmODZjZDc5OTQzOTAxMSJ9.signature'
+                company:
+                  value:
+                    company:
+                      id: '507f1f77bcf86cd799439011'
+                      name: 'Constrular Materiais de Construção'
+                      logo: 'https://example.com/images/constrular.png'
+                    token: 'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjUwN2YxZjc3YmNmODZjZDc5OTQzOTAxMSJ9.signature'
+        '400':
+          description: Campo obrigatório ausente ou senha da instituição incorreta.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                missingField:
+                  value: { message: 'missing email field' }
+                wrongCompanyPassword:
+                  value: { message: 'password incorrect' }
+        '401':
+          description: Senha do usuário incorreta.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'password incorrect'
+        '404':
+          description: Usuário ou instituição não encontrado pelas credenciais informadas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                userNotFound:
+                  value: { message: 'user not exists or email incorrect' }
+                companyNotFound:
+                  value: { message: 'company not exists or, email or cnpj incorrect' }
+        '500':
+          $ref: '#/components/responses/InternalServerError'

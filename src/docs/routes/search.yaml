@@ -1,0 +1,49 @@
+paths:
+  /search:
+    get:
+      tags: [Busca]
+      operationId: searchProjectsAndMaterials
+      summary: Busca projetos e materiais por texto
+      description: |
+        Executa uma busca parcial e sem diferenciação entre maiúsculas e minúsculas:
+        em `title` para projetos e em `name` para materiais. Retorna os dois grupos e
+        suas contagens. Quando `query` é omitido ou vazio, a implementação retorna
+        uma mensagem em vez da estrutura normal de resultados.
+      parameters:
+        - name: query
+          in: query
+          required: false
+          description: Texto usado como expressão regular nas consultas de nome e título.
+          schema:
+            type: string
+            minLength: 1
+          example: garrafa
+      responses:
+        '200':
+          description: Resultado agrupado ou aviso de consulta vazia.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/SearchResponse'
+                  - $ref: '#/components/schemas/EmptySearchResponse'
+              examples:
+                results:
+                  summary: Busca executada
+                  value:
+                    query: 'garrafa'
+                    results:
+                      projects: []
+                      materials: []
+                    meta:
+                      numberProjects: 0
+                      numberMaterials: 0
+                      total: 0
+                emptyQuery:
+                  summary: Parâmetro ausente
+                  value:
+                    message: 'result not foun with this text'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
