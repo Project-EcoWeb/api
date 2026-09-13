@@ -1,0 +1,189 @@
+paths:
+  /users:
+    patch:
+      tags: [Usuários]
+      operationId: updateCurrentUser
+      summary: Atualiza o usuário autenticado
+      description: |
+        Atualiza parcialmente nome e/ou e-mail da conta identificada pelo JWT. A
+        senha não pode ser alterada por esta operação. A implementação extrai
+        somente `name` e `email` do corpo.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+      responses:
+        '204':
+          description: Usuário atualizado. A resposta não possui corpo.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Usuário do token não encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'user not found'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/me/profile:
+    get:
+      tags: [Usuários]
+      operationId: getCurrentUserProfile
+      summary: Obtém o perfil do usuário autenticado
+      description: |
+        Monta o perfil usando o ID do JWT e inclui todos os projetos do usuário,
+        além da contagem calculada desses projetos. A senha nunca é retornada.
+      responses:
+        '200':
+          description: Perfil do usuário e seus projetos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Usuário do token não encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'user not found'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/{id}/profile:
+    get:
+      tags: [Usuários]
+      operationId: getUserProfileById
+      summary: Obtém o perfil de um usuário por ID
+      description: |
+        Retorna o perfil e os projetos do usuário indicado no caminho. A operação
+        ainda exige autenticação, embora consulte outro usuário.
+      parameters:
+        - $ref: '#/components/parameters/MongoIdPath'
+      responses:
+        '200':
+          description: Perfil público encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfileResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Usuário não encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'user not found'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/favorites:
+    get:
+      tags: [Favoritos]
+      operationId: listCurrentUserFavorites
+      summary: Lista os favoritos do usuário autenticado
+      description: |
+        Retorna as associações de favoritos do usuário do JWT. Sem `type`, inclui
+        projetos e materiais; com `type`, filtra uma única categoria. As referências
+        não são populadas: `reference` contém apenas o ObjectId do recurso.
+      parameters:
+        - name: type
+          in: query
+          required: false
+          description: Tipo opcional de recurso. Nenhum outro parâmetro de consulta é aceito.
+          schema:
+            type: string
+            enum: [project, material]
+          example: project
+      responses:
+        '200':
+          description: Favoritos do usuário; a lista pode estar vazia.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Favorite'
+        '400':
+          description: Parâmetros de consulta incorretos, múltiplos ou tipo não suportado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'incorrect query params'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/count-projects:
+    get:
+      tags: [Usuários]
+      operationId: countCurrentUserProjects
+      summary: Conta os projetos do usuário autenticado
+      description: Conta documentos de projeto associados ao ID contido no JWT.
+      responses:
+        '200':
+          description: ID do usuário e número de projetos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectCountResponse'
+              example:
+                data:
+                  user: '507f1f77bcf86cd799439011'
+                  numberProjects: 3
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Usuário do token não encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'User not exists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/count-favorites:
+    get:
+      tags: [Favoritos]
+      operationId: countCurrentUserFavorites
+      summary: Conta os favoritos do usuário autenticado
+      description: Conta favoritos de projetos e materiais associados ao usuário do JWT.
+      responses:
+        '200':
+          description: ID do usuário e número total de favoritos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteCountResponse'
+              example:
+                data:
+                  user: '507f1f77bcf86cd799439011'
+                  numberFavorites: 8
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Usuário do token não encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'User not exists'
+        '500':
+          $ref: '#/components/responses/InternalServerError'

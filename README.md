@@ -69,32 +69,17 @@ ECOWEB-api/
 - Após login, o token deve ser enviado no `Authorization Header` como:  
   `Bearer seu_token`.
 
----
+## 📖 Documentação Swagger
 
-## 🔄 Principais Rotas
+Com a API em execução, acesse [http://localhost:3333/api-docs](http://localhost:3333/api-docs).
+A documentação OpenAPI descreve todas as rotas, autenticação, parâmetros, corpos,
+schemas, enumerações, respostas, erros e exemplos executáveis pelo botão **Try it out**.
 
-### Auth
+Para verificar a integridade dos arquivos Swagger sem iniciar o banco de dados:
 
-| Método | Rota            | Descrição                  |
-|--------|------------------|-----------------------------|
-| POST   | `/api/register` | Cadastro de usuário        |
-| POST   | `/api/login`    | Login de usuário           |
-
-### Projetos
-
-| Método | Rota               | Descrição                         |
-|--------|--------------------|------------------------------------|
-| GET    | `/api/projetos`     | Listar todos os projetos           |
-| POST   | `/api/projetos`     | Criar novo projeto (auth)          |
-| GET    | `/api/projetos/:id` | Obter detalhes de um projeto       |
-
-### Materiais
-
-| Método | Rota                 | Descrição                         |
-|--------|----------------------|------------------------------------|
-| GET    | `/api/materiais`     | Listar materiais disponíveis       |
-| POST   | `/api/materiais`     | Cadastrar novo material (empresa) |
-| GET    | `/api/materiais/:id` | Obter detalhes de um material      |
+```bash
+npm run docs:check
+```
 
 ---
 

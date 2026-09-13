@@ -1,75 +1,759 @@
 components:
   schemas:
-    User:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID único do usuário gerado pelo MongoDB.
-          example: '63b4a3e6a2b4cde37d5c935a'
-        name:
-          type: string
-          description: Nome completo do usuário.
-          example: 'Ada Lovelace'
-        email:
-          type: string
-          format: email
-          description: Endereço de e-mail único do usuário.
-          example: 'ada.lovelace@example.com'
-
-    RegisterRequest:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Nome do usuário.
-          example: 'Ada Lovelace'
-        email:
-          type: string
-          format: email
-          description: E-mail para o novo registro.
-          example: 'ada.lovelace@example.com'
-        password:
-          type: string
-          format: password
-          description: Senha para o novo usuário.
-          example: 'senhaSegura123'
-      required:
-        - name
-        - email
-        - password
-
-    LoginRequest:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-          description: E-mail do usuário cadastrado.
-          example: 'ada.lovelace@example.com'
-        password:
-          type: string
-          format: password
-          description: Senha do usuário.
-          example: 'senhaSegura123'
-      required:
-        - email
-        - password
-
-    LoginSuccessResponse:
-      type: object
-      properties:
-        user:
-          $ref: '#/components/schemas/User' 
-        token:
-          type: string
-          description: Token JWT para autenticação.
-          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzYjRhM2U2YTJiNGNkZTM3ZDVjOTM1YSIsImlhdCI6MTY3Mjc4NDM3NSwiZXhwIjoxNjcyODYwNzc1fQ.tC_b_6m...'
+    MongoId:
+      type: string
+      pattern: '^[a-fA-F0-9]{24}$'
+      description: Identificador ObjectId gerado pelo MongoDB.
+      example: '507f1f77bcf86cd799439011'
 
     ErrorResponse:
       type: object
+      required: [message]
       properties:
         message:
           type: string
-          description: Descrição detalhada do erro.
-          example: 'user not exists'
+          description: Mensagem legível que descreve a falha.
+          example: 'resource not found'
+
+    AuthenticationErrorResponse:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: string
+          description: Motivo pelo qual a autenticação JWT falhou.
+          enum: [token not exists, token invalid]
+          example: 'token invalid'
+
+    HealthResponse:
+      type: object
+      required: [isActive]
+      properties:
+        isActive:
+          type: boolean
+          description: Indica que o processo HTTP está ativo e respondendo.
+          example: true
+
+    User:
+      type: object
+      description: Dados públicos de uma conta de usuário.
+      required: [id, name, email]
+      properties:
+        id:
+          $ref: '#/components/schemas/MongoId'
+        name:
+          type: string
+          description: Nome do usuário.
+          example: 'Maria Silva'
+        email:
+          type: string
+          format: email
+          description: E-mail único, armazenado em letras minúsculas.
+          example: 'maria.silva@example.com'
+
+    UserDocument:
+      type: object
+      description: Representação persistida e pública de um usuário, sem a senha.
+      required: [_id, name, email]
+      properties:
+        _id:
+          $ref: '#/components/schemas/MongoId'
+        name:
+          type: string
+          example: 'Maria Silva'
+        email:
+          type: string
+          format: email
+          example: 'maria.silva@example.com'
+        __v:
+          type: integer
+          readOnly: true
+          example: 0
+
+    Company:
+      type: object
+      description: Instituição que disponibiliza materiais, sempre sem a senha.
+      required: [_id, name, cnpj, phone, location, cep, email, isVerified]
+      properties:
+        _id:
+          $ref: '#/components/schemas/MongoId'
+        name:
+          type: string
+          example: 'Constrular Materiais de Construção'
+        cnpj:
+          type: string
+          description: CNPJ com ou sem pontuação.
+          pattern: '^\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2}$'
+          example: '13.896.592/0001-13'
+        phone:
+          type: string
+          description: Telefone brasileiro com DDD opcional e 8 ou 9 dígitos.
+          example: '95991203454'
+        location:
+          type: string
+          description: Endereço ou descrição do local da instituição.
+          example: 'Rua das Construções, 123 - Centro, Boa Vista - RR'
+        cep:
+          type: string
+          pattern: '^\d{5}-?\d{3}$'
+          example: '69305-130'
+        email:
+          type: string
+          format: email
+          example: 'contato@constrular.com.br'
+        isVerified:
+          type: boolean
+          readOnly: true
+          description: Indica se a instituição foi verificada.
+          default: false
+          example: true
+        responsibleName:
+          type: string
+          description: Nome do responsável pela instituição.
+          example: 'Carlos Silva'
+        logo:
+          type: string
+          format: uri
+          description: URL pública da logomarca.
+          example: 'https://example.com/images/constrular.png'
+        __v:
+          type: integer
+          readOnly: true
+          example: 0
+
+    Project:
+      type: object
+      description: Projeto sustentável publicado por um usuário.
+      required: [_id, title, user, image, description, materials, stages, category, difficulty]
+      properties:
+        _id:
+          $ref: '#/components/schemas/MongoId'
+        title:
+          type: string
+          example: 'Horta Vertical com Garrafas PET'
+        user:
+          description: ID do autor ou objeto público populado, conforme a operação.
+          oneOf:
+            - $ref: '#/components/schemas/MongoId'
+            - $ref: '#/components/schemas/UserDocument'
+        image:
+          type: string
+          format: uri
+          description: URL da imagem de capa.
+          example: 'https://example.com/images/horta-pet.jpg'
+        description:
+          type: string
+          example: 'Sistema de horta vertical usando garrafas PET recicladas.'
+        materials:
+          type: array
+          minItems: 1
+          description: Materiais necessários para executar o projeto.
+          items:
+            type: string
+          example: ['Garrafas PET', 'Terra adubada', 'Mudas', 'Cordão de nylon']
+        stages:
+          type: array
+          minItems: 1
+          description: Etapas ordenadas de execução.
+          items:
+            type: string
+          example: ['Cortar as garrafas', 'Fazer furos para drenagem', 'Adicionar terra', 'Plantar as mudas']
+        video:
+          type: string
+          format: uri
+          nullable: true
+          description: URL opcional de um vídeo explicativo.
+          example: 'https://www.youtube.com/watch?v=example'
+        category:
+          type: string
+          example: 'Jardim'
+        difficulty:
+          type: string
+          enum: [Facil, Medio, Dificil]
+          description: Nível de dificuldade; os valores são gravados sem acentos.
+          example: 'Facil'
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          example: '2026-09-12T14:30:00.000Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          example: '2026-09-12T14:30:00.000Z'
+        __v:
+          type: integer
+          readOnly: true
+          example: 0
+
+    Material:
+      type: object
+      description: Material reutilizável disponibilizado por uma instituição.
+      required: [_id, name, description, location, quantity, category, unitOfMeasure, status, company]
+      properties:
+        _id:
+          $ref: '#/components/schemas/MongoId'
+        name:
+          type: string
+          example: 'Garrafas PET Transparentes'
+        image:
+          type: string
+          format: uri
+          nullable: true
+          description: URL pública da imagem do material.
+          example: 'https://example.com/images/garrafas-pet.jpg'
+        description:
+          type: string
+          example: 'Garrafas PET limpas, ideais para projetos de reciclagem criativa.'
+        location:
+          type: string
+          description: Local onde o material pode ser retirado.
+          example: 'Área de Triagem, Setor A'
+        quantity:
+          type: number
+          minimum: 1
+          default: 1
+          example: 200
+        category:
+          type: string
+          example: 'Plástico'
+        unitOfMeasure:
+          type: string
+          example: 'Unidades'
+        instructions:
+          type: string
+          nullable: true
+          description: Orientações opcionais para retirada.
+          example: 'Comparecer pela manhã e procurar o responsável pelo setor.'
+        status:
+          type: string
+          enum: [Publicado, Pausado, Doado]
+          default: Publicado
+          example: 'Publicado'
+        removedBy:
+          allOf:
+            - $ref: '#/components/schemas/MongoId'
+          nullable: true
+          description: Usuário que marcou a remoção, quando aplicável.
+        removedAt:
+          type: string
+          format: date-time
+          nullable: true
+        company:
+          description: ID da instituição ou objeto populado, conforme a operação.
+          oneOf:
+            - $ref: '#/components/schemas/MongoId'
+            - $ref: '#/components/schemas/Company'
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          example: '2026-09-12T14:30:00.000Z'
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+          example: '2026-09-12T14:30:00.000Z'
+        __v:
+          type: integer
+          readOnly: true
+          example: 0
+
+    Favorite:
+      type: object
+      description: Associação polimórfica entre um usuário e um projeto ou material.
+      required: [_id, user, onModel, reference, createdAt]
+      properties:
+        _id:
+          $ref: '#/components/schemas/MongoId'
+        user:
+          $ref: '#/components/schemas/MongoId'
+        onModel:
+          type: string
+          enum: [Project, Material]
+          example: 'Project'
+        reference:
+          $ref: '#/components/schemas/MongoId'
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+          example: '2026-09-12T14:30:00.000Z'
+        __v:
+          type: integer
+          readOnly: true
+          example: 0
+
+    Feedback:
+      type: object
+      description: Registro de feedback associado à conclusão de uma doação.
+      required: [_id, material, supplier, receiver, createdAt, updatedAt]
+      properties:
+        _id:
+          $ref: '#/components/schemas/MongoId'
+        material:
+          $ref: '#/components/schemas/MongoId'
+        supplier:
+          $ref: '#/components/schemas/MongoId'
+        receiver:
+          $ref: '#/components/schemas/MongoId'
+        text:
+          type: string
+          nullable: true
+          example: 'Material entregue conforme combinado e em ótimo estado.'
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+
+    RegisterUserRequest:
+      type: object
+      additionalProperties: false
+      required: [name, email, password]
+      properties:
+        name:
+          type: string
+          example: 'Maria Silva'
+        email:
+          type: string
+          format: email
+          example: 'maria.silva@example.com'
+        password:
+          type: string
+          format: password
+          writeOnly: true
+          description: Senha em texto puro; é armazenada como hash bcrypt.
+          example: 'SenhaSegura123!'
+
+    RegisterCompanyRequest:
+      type: object
+      additionalProperties: false
+      required: [name, location, cnpj, phone, cep, email, password]
+      properties:
+        name:
+          type: string
+          example: 'Constrular Materiais de Construção'
+        location:
+          type: string
+          example: 'Rua das Construções, 123 - Centro, Boa Vista - RR'
+        cnpj:
+          type: string
+          pattern: '^\d{2}\.?\d{3}\.?\d{3}/?\d{4}-?\d{2}$'
+          example: '13.896.592/0001-13'
+        phone:
+          type: string
+          example: '95991203454'
+        cep:
+          type: string
+          pattern: '^\d{5}-?\d{3}$'
+          example: '69305-130'
+        email:
+          type: string
+          format: email
+          example: 'contato@constrular.com.br'
+        responsibleName:
+          type: string
+          example: 'Carlos Silva'
+        logo:
+          type: string
+          format: uri
+          example: 'https://example.com/images/constrular.png'
+        password:
+          type: string
+          format: password
+          writeOnly: true
+          example: 'SenhaSegura123!'
+
+    LoginUserRequest:
+      type: object
+      additionalProperties: false
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: 'maria.silva@example.com'
+        password:
+          type: string
+          format: password
+          writeOnly: true
+          example: 'SenhaSegura123!'
+
+    LoginCompanyRequest:
+      type: object
+      additionalProperties: false
+      required: [emailOrCnpj, password]
+      properties:
+        emailOrCnpj:
+          type: string
+          description: E-mail ou CNPJ da instituição, exatamente como cadastrado.
+          example: '13.896.592/0001-13'
+        password:
+          type: string
+          format: password
+          writeOnly: true
+          example: 'SenhaSegura123!'
+
+    LoginUserResponse:
+      type: object
+      required: [user, token]
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        token:
+          type: string
+          description: JWT assinado contendo o ID da conta.
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUwN2YxZjc3YmNmODZjZDc5OTQzOTAxMSJ9.signature'
+
+    LoginCompanyResponse:
+      type: object
+      required: [company, token]
+      properties:
+        company:
+          type: object
+          required: [id, name]
+          properties:
+            id:
+              $ref: '#/components/schemas/MongoId'
+            name:
+              type: string
+              example: 'Constrular Materiais de Construção'
+            logo:
+              type: string
+              format: uri
+              nullable: true
+              example: 'https://example.com/images/constrular.png'
+        token:
+          type: string
+          description: JWT assinado contendo o ID da instituição.
+          example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUwN2YxZjc3YmNmODZjZDc5OTQzOTAxMSJ9.signature'
+
+    CreateProjectRequest:
+      type: object
+      additionalProperties: false
+      required: [title, image, description, materials, stages, category, difficulty]
+      properties:
+        title:
+          type: string
+          example: 'Horta Vertical com Garrafas PET'
+        image:
+          type: string
+          format: uri
+          example: 'https://example.com/images/horta-pet.jpg'
+        description:
+          type: string
+          example: 'Sistema de horta vertical usando garrafas PET recicladas.'
+        materials:
+          type: array
+          minItems: 1
+          items:
+            type: string
+          example: ['Garrafas PET', 'Terra adubada', 'Mudas']
+        stages:
+          type: array
+          minItems: 1
+          items:
+            type: string
+          example: ['Cortar as garrafas', 'Fazer a drenagem', 'Plantar as mudas']
+        video:
+          type: string
+          format: uri
+          nullable: true
+          example: 'https://www.youtube.com/watch?v=example'
+        category:
+          type: string
+          example: 'Jardim'
+        difficulty:
+          type: string
+          enum: [Facil, Medio, Dificil]
+          example: 'Facil'
+
+    CreateMaterialRequest:
+      type: object
+      additionalProperties: false
+      required: [name, description, location, quantity, category, unitOfMeasure]
+      properties:
+        name:
+          type: string
+          example: 'Garrafas PET Transparentes'
+        image:
+          type: string
+          format: uri
+          nullable: true
+          example: 'https://example.com/images/garrafas-pet.jpg'
+        description:
+          type: string
+          example: 'Garrafas PET limpas, ideais para reciclagem criativa.'
+        location:
+          type: string
+          example: 'Área de Triagem, Setor A'
+        quantity:
+          type: number
+          minimum: 1
+          default: 1
+          example: 200
+        category:
+          type: string
+          example: 'Plástico'
+        unitOfMeasure:
+          type: string
+          example: 'Unidades'
+        instructions:
+          type: string
+          nullable: true
+          example: 'Comparecer pela manhã e procurar o responsável pelo setor.'
+
+    UpdateMaterialRequest:
+      type: object
+      minProperties: 1
+      description: Campos editáveis do material; envie somente os que devem mudar.
+      properties:
+        name:
+          type: string
+        image:
+          type: string
+          format: uri
+          nullable: true
+        description:
+          type: string
+        location:
+          type: string
+        quantity:
+          type: number
+          minimum: 1
+        category:
+          type: string
+        unitOfMeasure:
+          type: string
+        instructions:
+          type: string
+          nullable: true
+      example:
+        quantity: 120
+        instructions: 'Retirada disponível de segunda a sexta, das 8h às 12h.'
+
+    UpdateMaterialStatusRequest:
+      type: object
+      additionalProperties: false
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [Publicado, Pausado, Doado]
+          example: 'Pausado'
+
+    CreateFavoriteRequest:
+      type: object
+      additionalProperties: false
+      required: [onModel, reference]
+      properties:
+        onModel:
+          type: string
+          enum: [Project, Material]
+          description: Nome do modelo referenciado; diferencia maiúsculas de minúsculas.
+          example: 'Project'
+        reference:
+          allOf:
+            - $ref: '#/components/schemas/MongoId'
+          description: ID do projeto ou material que será favoritado.
+
+    UpdateUserRequest:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      description: Envie ao menos um dos campos que devem ser alterados.
+      properties:
+        name:
+          type: string
+          example: 'Maria da Silva'
+        email:
+          type: string
+          format: email
+          example: 'maria.silva@example.com'
+
+    CreateFeedbackRequest:
+      type: object
+      additionalProperties: false
+      required: [material, supplier, receiver]
+      properties:
+        material:
+          allOf:
+            - $ref: '#/components/schemas/MongoId'
+          description: Material cuja doação foi concluída.
+        supplier:
+          allOf:
+            - $ref: '#/components/schemas/MongoId'
+          description: ID da instituição fornecedora e proprietária do material.
+        receiver:
+          allOf:
+            - $ref: '#/components/schemas/MongoId'
+          description: ID do usuário que recebeu o material.
+        text:
+          type: string
+          description: Comentário opcional sobre a experiência.
+          example: 'Material entregue conforme combinado e em ótimo estado.'
+
+    UserProfileResponse:
+      type: object
+      required: [user]
+      properties:
+        user:
+          type: object
+          required: [id, name, email, numberProjects, projects]
+          properties:
+            id:
+              $ref: '#/components/schemas/MongoId'
+            name:
+              type: string
+              example: 'Maria Silva'
+            email:
+              type: string
+              format: email
+              example: 'maria.silva@example.com'
+            numberProjects:
+              type: integer
+              minimum: 0
+              example: 3
+            projects:
+              type: array
+              items:
+                $ref: '#/components/schemas/Project'
+
+    CompanyProfileResponse:
+      allOf:
+        - $ref: '#/components/schemas/Company'
+        - type: object
+          required: [materials]
+          properties:
+            materials:
+              type: array
+              items:
+                $ref: '#/components/schemas/Material'
+
+    ProjectCountResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: object
+          required: [user, numberProjects]
+          properties:
+            user:
+              $ref: '#/components/schemas/MongoId'
+            numberProjects:
+              type: integer
+              minimum: 0
+              example: 3
+
+    FavoriteCountResponse:
+      type: object
+      required: [data]
+      properties:
+        data:
+          type: object
+          required: [user, numberFavorites]
+          properties:
+            user:
+              $ref: '#/components/schemas/MongoId'
+            numberFavorites:
+              type: integer
+              minimum: 0
+              example: 8
+
+    HomeResponse:
+      type: object
+      required: [projects, materials]
+      properties:
+        projects:
+          type: array
+          maxItems: 3
+          description: Três projetos retornados pela consulta de itens recentes.
+          items:
+            $ref: '#/components/schemas/Project'
+        materials:
+          type: array
+          maxItems: 3
+          description: Três materiais retornados pela consulta de itens recentes.
+          items:
+            $ref: '#/components/schemas/Material'
+
+    SearchResponse:
+      type: object
+      required: [query, results, meta]
+      properties:
+        query:
+          type: string
+          example: 'garrafa'
+        results:
+          type: object
+          required: [projects, materials]
+          properties:
+            projects:
+              type: array
+              items:
+                $ref: '#/components/schemas/Project'
+            materials:
+              type: array
+              items:
+                $ref: '#/components/schemas/Material'
+        meta:
+          type: object
+          required: [numberProjects, numberMaterials, total]
+          properties:
+            numberProjects:
+              type: integer
+              minimum: 0
+              example: 2
+            numberMaterials:
+              type: integer
+              minimum: 0
+              example: 1
+            total:
+              type: integer
+              minimum: 0
+              example: 3
+
+    EmptySearchResponse:
+      type: object
+      required: [message]
+      properties:
+        message:
+          type: string
+          example: 'result not foun with this text'
+
+  parameters:
+    MongoIdPath:
+      name: id
+      in: path
+      required: true
+      description: Identificador ObjectId do recurso.
+      schema:
+        $ref: '#/components/schemas/MongoId'
+
+  responses:
+    Unauthorized:
+      description: Token JWT ausente, inválido ou expirado.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AuthenticationErrorResponse'
+          examples:
+            absent:
+              summary: Cabeçalho Authorization ausente
+              value: { error: 'token not exists' }
+            invalid:
+              summary: Token inválido ou expirado
+              value: { error: 'token invalid' }
+    InternalServerError:
+      description: Erro interno ou falha de persistência/validação não tratada.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            message: 'Internal server error'

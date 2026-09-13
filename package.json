@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
+    "docs:check": "node src/docs/validate.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "node src/infra/seeders/seeder.js",
     "seed:destroy": "node src/infra/seeders/seeder.js -d"
