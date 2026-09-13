@@ -1,4 +1,4 @@
-import MaterialRepository from "../../domain/repositorys/MaterialRepository.js";
+import MaterialRepository from "../../domain/repositories/MaterialRepository.js";
 import AppError from '../../shared/error/AppError.js';
 import MaterialValidator from "../validations/MaterialValidator.js";
 import CompanyValidator from "../validations/CompanyValidator.js";
@@ -16,7 +16,7 @@ class MaterialService{
         quantity,
         category,
         unitOfMeasure,
-        instructions
+        instructions    
     }, user){
 
         await MaterialRepository.save({
@@ -80,6 +80,24 @@ class MaterialService{
         if (!(await MaterialValidator.checkUser({ id, user }))) throw new AppError('this material not is authorized', 403);
 
         await MaterialRepository.updateById(id, data);
+    }
+
+    static async findByNameOrStatus(name, status='all', user) {
+
+        if (status && !['publicado', 'pausado', 'doado', 'all'].includes(status)) {
+            throw new AppError('input status invalid', 400);
+        }
+        
+        if (status === 'all') {
+            return await MaterialRepository.findByNameAndUser(name, user);
+        }
+
+        if (!name) {
+            return await MaterialRepository.findByStatusAndUser(status, user);
+        }
+
+        const materials = await MaterialRepository.findByNameAndStatusAndUser(name, status, user);
+        return materials;
     }
 }
 

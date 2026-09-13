@@ -50,6 +50,8 @@ const companySchema = new Schema({
         trim: true,
         select: false
     }
+}, {
+    timestamps: true
 });
 
 companySchema.pre('save', async function (next) {
@@ -59,9 +61,5 @@ companySchema.pre('save', async function (next) {
     this.password = await bcrypt.hash(this.password, salt);
     next();
 })
-
-companySchema.method('comparePassword', async function (password) {
-    return bcrypt.compare(password, this.password);
-});
 
 export default model('Company', companySchema);

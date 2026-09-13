@@ -1,10 +1,10 @@
-import UserRespository from "../../domain/repositorys/UserRespository.js";
+import UserRespository from "../../domain/repositories/UserRespository.js";
 import AppError from "../../shared/error/AppError.js";
 import jwt from 'jsonwebtoken';
 import authConfig from '../../shared/config/auth.js';
 import UserValidator from "../validations/UserValidator.js";
 import CompanyValidator from "../validations/CompanyValidator.js";
-import CompanyRepository from "../../domain/repositorys/CompanyRepository.js";
+import CompanyRepository from "../../domain/repositories/CompanyRepository.js";
 
 class AuthService{
     static async register({ name, email, password}){
@@ -48,14 +48,13 @@ class AuthService{
         const company = await CompanyRepository.findOneAndComparePassword({ emailOrCnpj: data.emailOrCnpj, password: data.password });
 
         if (!company) {
-            throw new AppError('password incorrect', 400);
+            throw new AppError('password incorrect', 401);
         }
 
-        const { id, name, logo } = company;
-
+        const { _id, name, logo } = company;
         return {
-            company: { id, name, logo },
-            token: jwt.sign({ id }, authConfig.secret, { expiresIn: authConfig.expiresIn })
+            company: { id: _id.toString(), name, logo },
+            token: jwt.sign({ id: _id.toString() }, authConfig.secret, { expiresIn: authConfig.expiresIn })
         };
     }
     static async registerCompany({ name, location, cnpj, phone, cep, email, responsibleName, logo, password }) {

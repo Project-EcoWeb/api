@@ -1,7 +1,7 @@
-import UserRepository from '../../domain/repositorys/UserRespository.js';
+import UserRepository from '../../domain/repositories/UserRespository.js';
 import UserValidator from '../validations/UserValidator.js';
 import AppError from '../../shared/error/AppError.js';
-import ProjectRepository from "../../domain/repositorys/ProjectRepository.js";
+import ProjectRepository from "../../domain/repositories/ProjectRepository.js";
 class UserService{
     static async find() {
         

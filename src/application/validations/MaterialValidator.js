@@ -1,4 +1,4 @@
-import MaterialRepository from "../../domain/repositorys/MaterialRepository.js";
+import MaterialRepository from "../../domain/repositories/MaterialRepository.js";
 
 class MaterialValidator {
     static async isExists(id) {

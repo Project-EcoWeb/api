@@ -1,4 +1,4 @@
-import FeedbackRepository from "../../domain/repositorys/FeedbackRepository.js";
+import FeedbackRepository from "../../domain/repositories/FeedbackRepository.js";
 import AppError from "../../shared/error/AppError.js";
 import MaterialValidator from "../validations/MaterialValidator.js";
 import UserValidator from "../validations/UserValidator.js";
@@ -20,7 +20,7 @@ class FeedbackService{
 
         const { material, supplier } = await FeedbackRepository.create(data);
 
-        await MaterialService.updateStatus({ id: material, user: supplier, status: "Doado" });
+        await MaterialService.updateStatus({ id: material, user: supplier, status: "doado" });
     }
 }
 

@@ -1,15 +1,16 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/server.js",
   "type": "module",
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "docs:check": "node src/docs/validate.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test \"test/**/*.test.js\"",
+    "test:watch": "node --test --watch \"test/**/*.test.js\"",
     "seed": "node src/infra/seeders/seeder.js",
-    "seed:destroy": "node src/infra/seeders/seeder.js -d"
+    "seed:destroy": "node src/infra/seeders/seeder.js -d",
+    "database": "node src/infra/db/index.js"
   },
   "repository": {
     "type": "git",
@@ -30,11 +31,13 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.22.0",
-    "nodemon": "^3.1.10",
     "pino": "^9.7.0",
     "pino-http": "^10.5.0",
-    "pino-pretty": "^13.1.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10",
+    "pino-pretty": "^13.1.1"
   }
 }

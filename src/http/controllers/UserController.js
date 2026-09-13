@@ -17,7 +17,7 @@ class UserController{
             return res.status(204).end();
 
         } catch (error) {
-            return res.status(error.statuCode || 500).json({ message: error.message });
+            return res.status(error.statusCode || 500).json({ message: error.message });
         }
     }
 

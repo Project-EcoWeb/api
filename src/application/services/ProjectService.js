@@ -1,4 +1,4 @@
-import ProjectRepository from '../../domain/repositorys/ProjectRepository.js';
+import ProjectRepository from '../../domain/repositories/ProjectRepository.js';
 import AppError from '../../shared/error/AppError.js';
 import UserValidator from '../validations/UserValidator.js';
 
