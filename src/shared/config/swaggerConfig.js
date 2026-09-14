@@ -41,15 +41,15 @@ autenticação produzidas pelo middleware usam \`{ "error": "..." }\`.
       name: 'ISC',
     },
     'x-logo': {
-      url: 'http://localhost:3333/public/logo.jpg',
+      url: '/public/logo.jpg',
       backgroundColor: '#FFFFFF',
       altText: 'Logo EcoWeb'
     },
   },
   servers: [
     {
-      url: 'http://localhost:3333',
-      description: 'Servidor local de desenvolvimento',
+      url: '/',
+      description: 'Servidor que hospeda esta documentação',
     },
   ],
   tags: [

@@ -1,0 +1,15 @@
+.git
+.gitignore
+.agents
+.codex
+.env
+.env.*
+!.env.example
+node_modules
+npm-debug.log*
+coverage
+.nyc_output
+test
+Dockerfile*
+docker-compose*.yml
+README.md
