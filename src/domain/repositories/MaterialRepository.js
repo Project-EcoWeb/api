@@ -1,14 +1,22 @@
 import Material from '../model/Material.js';
 
 class MaterialRepository {
-    static async findAll(status='Publicado') {
-        return await Material.find({ status }).populate({ path: 'company', select: '-password' });
+    static async findAll() {
+        return await Material.find({ status: 'publicado' })
+            .select('name image description location quantity category unitOfMeasure instructions status company createdAt updatedAt')
+            .populate({ path: 'company', select: 'name logo location' });
     }
     static async save(data) {
         return await Material.create(data);
     }
     static async findThreeLast() {
-        return await Material.find().sort({ date: -1 }).limit(3);
+        return await Material.find({ status: 'publicado' })
+            .select('name image description location quantity category unitOfMeasure instructions status company createdAt updatedAt')
+            .sort({ createdAt: -1 }).limit(3);
+    }
+    static async findPublishedByUser(user) {
+        return await Material.find({ company: user, status: 'publicado' })
+            .select('name image description location quantity category unitOfMeasure instructions status company createdAt updatedAt');
     }
     static async findByUser(user) {
         return await Material.find({ company: user });
@@ -16,11 +24,17 @@ class MaterialRepository {
     static async findById(id) {
         return await Material.findById(id).populate({ path: 'company', select: '-password' });
     }
+    static async findPublishedById(id) {
+        return await Material.findOne({ _id: id, status: 'publicado' })
+            .select('name image description location quantity category unitOfMeasure instructions status company createdAt updatedAt')
+            .populate({ path: 'company', select: 'name logo location' });
+    }
 
     static async findAllByContainsText(text) {
         return await Material.find({
-            name: { $regex: text, $options: 'i' }
-        }).select('-user');;
+            name: { $regex: text, $options: 'i' },
+            status: 'publicado'
+        }).select('name image description location quantity category unitOfMeasure instructions status company createdAt updatedAt');
     }
 
     static async updateStatus({id, status}) {
