@@ -5,8 +5,9 @@ paths:
       operationId: listPublishedMaterials
       summary: Lista os materiais publicados
       description: |
-        Retorna somente materiais com status `Publicado`. O campo `company` vem
-        populado com os dados públicos da instituição, sem a senha.
+        Retorna somente materiais com status `publicado`. O campo `company` contém
+        apenas nome, logo e localização da instituição.
+      security: []
       responses:
         '200':
           description: Materiais publicados; a lista pode estar vazia.
@@ -15,9 +16,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Material'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+                  $ref: '#/components/schemas/PublicMaterial'
         '500':
           $ref: '#/components/responses/InternalServerError'
     post:
@@ -26,7 +25,7 @@ paths:
       summary: Publica um novo material
       description: |
         Cria um material para a instituição identificada pelo JWT. O campo
-        `company` é obtido do token e o status inicial é `Publicado`; não envie
+        `company` é obtido do token e o status inicial é `publicado`; não envie
         esses campos no corpo.
       requestBody:
         required: true
@@ -109,12 +108,95 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
+  /materials/search:
+    get:
+      tags: [Materiais]
+      operationId: searchMyMaterials
+      summary: Filtra os materiais da instituição autenticada
+      description: |
+        Busca exclusivamente materiais da instituição identificada pelo JWT.
+        Para a busca pública por materiais e projetos, use `GET /search`.
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Trecho do nome do material.
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [publicado, pausado, doado, all]
+            default: all
+          description: Status a filtrar; `all` considera todos os status.
+      responses:
+        '200':
+          description: Materiais da instituição que correspondem aos filtros.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Material'
+        '400':
+          description: Status inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /materials/me/{id}:
+    get:
+      tags: [Materiais]
+      operationId: getMyMaterialById
+      summary: Consulta um material da instituição autenticada
+      description: |
+        Retorna o material da própria instituição, inclusive quando estiver
+        `pausado` ou `doado`. O ID do proprietário é obtido do JWT.
+      parameters:
+        - $ref: '#/components/parameters/MongoIdPath'
+      responses:
+        '200':
+          description: Material da instituição encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Material'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Material pertence a outra instituição.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'this material not is authorized'
+        '404':
+          description: Material não encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'material not found'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
   /materials/{id}:
     get:
       tags: [Materiais]
       operationId: getMaterialById
       summary: Consulta os detalhes de um material
-      description: Retorna o material pelo ObjectId com os dados públicos da instituição populados em `company`.
+      description: |
+        Retorna somente materiais com status `publicado`, com nome, logo e localização
+        da instituição. Materiais pausados ou doados retornam 404. A instituição
+        proprietária pode consultar esses itens em `GET /materials/me/{id}`.
+      security: []
       parameters:
         - $ref: '#/components/parameters/MongoIdPath'
       responses:
@@ -123,9 +205,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Material'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+                $ref: '#/components/schemas/PublicMaterial'
         '404':
           description: Nenhum material corresponde ao ID.
           content:
@@ -226,11 +306,11 @@ paths:
               $ref: '#/components/schemas/UpdateMaterialStatusRequest'
             examples:
               pause:
-                value: { status: 'Pausado' }
+                value: { status: 'pausado' }
               publish:
-                value: { status: 'Publicado' }
+                value: { status: 'publicado' }
               donated:
-                value: { status: 'Doado' }
+                value: { status: 'doado' }
       responses:
         '200':
           description: Status alterado. A resposta não possui corpo.

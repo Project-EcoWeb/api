@@ -6,7 +6,8 @@ paths:
       summary: Lista todos os projetos
       description: |
         Retorna todos os projetos cadastrados. O campo `user` vem populado com os
-        dados públicos do autor e nunca inclui a senha.
+        dados públicos do autor (ID e nome), sem e-mail ou senha.
+      security: []
       responses:
         '200':
           description: Lista completa de projetos; pode ser vazia.
@@ -16,8 +17,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Project'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'
     post:
@@ -118,6 +117,7 @@ paths:
       operationId: getProjectById
       summary: Consulta os detalhes de um projeto
       description: Retorna um projeto pelo ObjectId, com os dados públicos do autor populados em `user`.
+      security: []
       parameters:
         - $ref: '#/components/parameters/MongoIdPath'
       responses:
@@ -127,8 +127,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
         '404':
           description: Nenhum projeto corresponde ao ID informado.
           content:

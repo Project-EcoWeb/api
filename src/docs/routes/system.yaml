@@ -25,7 +25,9 @@ paths:
       summary: Retorna o conteúdo de destaque da página inicial
       description: |
         Agrega até três projetos e até três materiais consultados como os mais
-        recentes. A operação exige autenticação e faz duas consultas independentes.
+        recentes. Somente materiais com status `publicado` são exibidos. A operação
+        é pública e faz duas consultas independentes.
+      security: []
       responses:
         '200':
           description: Conteúdo inicial carregado; listas podem estar vazias.
@@ -33,7 +35,5 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HomeResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
         '500':
           $ref: '#/components/responses/InternalServerError'

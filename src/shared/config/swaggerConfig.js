@@ -16,10 +16,10 @@ reutilizáveis a pessoas interessadas em projetos sustentáveis.
 
 ### Autenticação
 
-Com exceção de \`GET /\`, \`POST /auth/login\` e \`POST /auth/register\`, todas as
-operações exigem um JWT no cabeçalho \`Authorization\`, no formato
-\`Bearer <token>\`. O mesmo token identifica usuários e instituições; cada operação
-explica qual tipo de conta é esperado pela regra de negócio.
+Consultas de descoberta (início, busca, projetos, materiais publicados e perfis
+públicos) podem ser usadas sem login. Operações pessoais ou de escrita exigem um JWT
+no cabeçalho \`Authorization\`, no formato \`Bearer <token>\`. O mesmo token identifica
+usuários e instituições; cada operação explica qual tipo de conta é esperado.
 
 ### Formato dos dados
 
