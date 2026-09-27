@@ -11,8 +11,14 @@ class SearchService{
             }; 
         }
 
-        const projects = await ProjectRepository.findAllByContainsText(query);
-        const materials = await MaterialRepository.findAllByContainsText(query);
+        if (typeof query !== 'string' || query.length > 100) {
+            throw new AppError('query must be a string with at most 100 characters', 400);
+        }
+
+        const literal = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+        const projects = await ProjectRepository.findAllByContainsText(literal);
+        const materials = await MaterialRepository.findAllByContainsText(literal);
 
         return {
             query: query,

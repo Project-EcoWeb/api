@@ -2,6 +2,7 @@ import CompanyRepository from '../../domain/repositories/CompanyRepository.js';
 import CompanyValidator from '../validations/CompanyValidator.js';
 import MaterialService from './MaterialService.js';
 import AppError from "../../shared/error/AppError.js";
+import { isValidObjectId } from 'mongoose';
 
 class CompanyService{
     static async update({ id, company }) {
@@ -93,6 +94,21 @@ class CompanyService{
             ...company.toObject(),
             materials
         };  
+    }
+
+    static async getPublicProfileById(id) {
+        if (!isValidObjectId(id)) throw new AppError('company not found', 404);
+        const company = await CompanyRepository.findById(id);
+        if (!company) throw new AppError('company not found', 404);
+
+        const materials = await MaterialService.findPublishedByUser(id);
+        return {
+            _id: company._id,
+            name: company.name,
+            logo: company.logo,
+            location: company.location,
+            materials
+        };
     }
 }
 

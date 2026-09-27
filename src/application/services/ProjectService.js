@@ -1,6 +1,7 @@
 import ProjectRepository from '../../domain/repositories/ProjectRepository.js';
 import AppError from '../../shared/error/AppError.js';
 import UserValidator from '../validations/UserValidator.js';
+import { isValidObjectId } from 'mongoose';
 
 class ProjectService{
     static async findAll(){
@@ -62,6 +63,8 @@ class ProjectService{
     }
 
     static async getById({ id, user }) {
+
+        if (!isValidObjectId(id)) throw new AppError('project not found', 404);
 
         const project = await ProjectRepository.findById(id);
 

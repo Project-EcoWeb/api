@@ -2,6 +2,7 @@ import MaterialRepository from "../../domain/repositories/MaterialRepository.js"
 import AppError from '../../shared/error/AppError.js';
 import MaterialValidator from "../validations/MaterialValidator.js";
 import CompanyValidator from "../validations/CompanyValidator.js";
+import { isValidObjectId } from 'mongoose';
 
 class MaterialService{
     static async findAll(){
@@ -44,6 +45,27 @@ class MaterialService{
         
         const materials = await MaterialRepository.findByUser(userId);
         return materials;
+    }
+
+    static async findPublishedByUser(companyId) {
+        return await MaterialRepository.findPublishedByUser(companyId);
+    }
+
+    static async getPublishedById(id) {
+        if (!isValidObjectId(id)) throw new AppError('material not found', 404);
+        const material = await MaterialRepository.findPublishedById(id);
+        if (!material) throw new AppError('material not found', 404);
+        return material;
+    }
+
+    static async getOwnedById({ id, user }) {
+        if (!isValidObjectId(id)) throw new AppError('material not found', 404);
+        const material = await MaterialRepository.findById(id);
+        if (!material) throw new AppError('material not found', 404);
+        if (String(material.company?._id ?? material.company) !== String(user)) {
+            throw new AppError('this material not is authorized', 403);
+        }
+        return material;
     }
 
     static async getById({ user, id }) {
