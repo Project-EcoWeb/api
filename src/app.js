@@ -7,7 +7,6 @@ import  authRoutes  from './http/routes/authRoutes.js';
 import projectRoutes from './http/routes/projectRoutes.js';
 import materialRoutes from './http/routes/materialRoutes.js';
 import userRoutes from './http/routes/userRoutes.js';
-import authentication from './http/middlewares/auth.js';
 import loggingRequest from './http/middlewares/loggingRequest.js';
 import logger from './infra/logger/logger.js';
 import HomeController from "./http/controllers/HomeController.js";
@@ -29,7 +28,6 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get('/', (req, res) => res.json({ isActive: true}));
 
 app.use('/auth', authRoutes);
-app.use(authentication);
 app.use(loggingRequest);
 
 app.use('/projects', projectRoutes);
