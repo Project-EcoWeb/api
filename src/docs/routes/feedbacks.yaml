@@ -6,7 +6,7 @@ paths:
       summary: Registra o feedback de uma doação
       description: |
         Cria um feedback que relaciona o material, a instituição fornecedora e o
-        usuário recebedor. Depois do registro, o material é marcado como `Doado`.
+        usuário recebedor. Depois do registro, o material é marcado como `doado`.
         O `supplier` precisa ser a instituição proprietária do material e o
         `receiver` precisa corresponder a um usuário existente.
       requestBody:

@@ -7,8 +7,10 @@ paths:
       description: |
         Executa uma busca parcial e sem diferenciação entre maiúsculas e minúsculas:
         em `title` para projetos e em `name` para materiais. Retorna os dois grupos e
-        suas contagens. Quando `query` é omitido ou vazio, a implementação retorna
-        uma mensagem em vez da estrutura normal de resultados.
+        suas contagens. Somente materiais `publicado` aparecem. O texto é tratado
+        literalmente, com limite de 100 caracteres. Quando `query` é omitido ou
+        vazio, a implementação retorna uma mensagem em vez dos resultados.
+      security: []
       parameters:
         - name: query
           in: query
@@ -17,6 +19,7 @@ paths:
           schema:
             type: string
             minLength: 1
+            maxLength: 100
           example: garrafa
       responses:
         '200':
@@ -43,7 +46,13 @@ paths:
                   summary: Parâmetro ausente
                   value:
                     message: 'result not foun with this text'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+        '400':
+          description: Consulta não textual ou maior que 100 caracteres.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'query must be a string with at most 100 characters'
         '500':
           $ref: '#/components/responses/InternalServerError'

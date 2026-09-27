@@ -2,7 +2,7 @@ import Project from "../model/Project.js";
 
 class ProjectRepository{
     static async findAll(){
-        return await Project.find().populate({ path: 'user', select: '-password'});
+        return await Project.find().populate({ path: 'user', select: 'name' });
     }
 
     static async save(data){
@@ -10,7 +10,7 @@ class ProjectRepository{
     }
 
     static async findThreeLast() {
-        return await Project.find().sort({ date: -1}).limit(3);
+        return await Project.find().sort({ createdAt: -1 }).limit(3);
     }
 
     static async findByUser(user) {
@@ -22,13 +22,13 @@ class ProjectRepository{
     }
 
     static async findById(id) {
-        return await Project.findById(id).populate({ path: 'user', select: '-password' });
+        return await Project.findById(id).populate({ path: 'user', select: 'name' });
     }
 
     static async findAllByContainsText(text) {
         return await Project.find({
             title: { $regex: text, $options: 'i'}
-        }).select('-user');;
+        }).populate({ path: 'user', select: 'name' });
     }
 }
 

@@ -53,22 +53,32 @@ components:
 
     UserDocument:
       type: object
-      description: Representação persistida e pública de um usuário, sem a senha.
-      required: [_id, name, email]
+      description: Dados públicos do autor de um projeto, sem e-mail ou senha.
+      required: [_id, name]
       properties:
         _id:
           $ref: '#/components/schemas/MongoId'
         name:
           type: string
           example: 'Maria Silva'
-        email:
+
+    PublicInstitution:
+      type: object
+      description: Dados da instituição permitidos para visitantes.
+      required: [_id, name, location]
+      properties:
+        _id:
+          $ref: '#/components/schemas/MongoId'
+        name:
           type: string
-          format: email
-          example: 'maria.silva@example.com'
-        __v:
-          type: integer
-          readOnly: true
-          example: 0
+          example: 'Constrular Materiais de Construção'
+        logo:
+          type: string
+          format: uri
+          example: 'https://example.com/images/constrular.png'
+        location:
+          type: string
+          example: 'Rua das Construções, 123 - Centro, Boa Vista - RR'
 
     Company:
       type: object
@@ -228,9 +238,9 @@ components:
           example: 'Comparecer pela manhã e procurar o responsável pelo setor.'
         status:
           type: string
-          enum: [Publicado, Pausado, Doado]
-          default: Publicado
-          example: 'Publicado'
+          enum: [publicado, pausado, doado]
+          default: publicado
+          example: 'publicado'
         removedBy:
           allOf:
             - $ref: '#/components/schemas/MongoId'
@@ -259,6 +269,55 @@ components:
           type: integer
           readOnly: true
           example: 0
+
+    PublicMaterial:
+      type: object
+      description: Material publicado visível para visitantes, sem metadados de remoção.
+      required: [_id, name, description, location, quantity, category, unitOfMeasure, status, company]
+      properties:
+        _id:
+          $ref: '#/components/schemas/MongoId'
+        name:
+          type: string
+          example: 'Garrafas PET Transparentes'
+        image:
+          type: string
+          format: uri
+          example: 'https://example.com/images/garrafas-pet.jpg'
+        description:
+          type: string
+          example: 'Garrafas PET limpas para reciclagem criativa.'
+        location:
+          type: string
+          example: 'Área de Triagem, Setor A'
+        quantity:
+          type: number
+          minimum: 1
+          example: 200
+        category:
+          type: string
+          example: 'Plástico'
+        unitOfMeasure:
+          type: string
+          example: 'Unidades'
+        instructions:
+          type: string
+          example: 'Retirar pela manhã no setor indicado.'
+        status:
+          type: string
+          enum: [publicado]
+          example: 'publicado'
+        company:
+          description: ID ou dados públicos da instituição, conforme a operação.
+          oneOf:
+            - $ref: '#/components/schemas/MongoId'
+            - $ref: '#/components/schemas/PublicInstitution'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
 
     Favorite:
       type: object
@@ -544,8 +603,8 @@ components:
       properties:
         status:
           type: string
-          enum: [Publicado, Pausado, Doado]
-          example: 'Pausado'
+          enum: [publicado, pausado, doado]
+          example: 'pausado'
 
     CreateFavoriteRequest:
       type: object
@@ -624,6 +683,28 @@ components:
               items:
                 $ref: '#/components/schemas/Project'
 
+    PublicUserProfileResponse:
+      type: object
+      required: [user]
+      properties:
+        user:
+          type: object
+          required: [id, name, numberProjects, projects]
+          properties:
+            id:
+              $ref: '#/components/schemas/MongoId'
+            name:
+              type: string
+              example: 'Maria Silva'
+            numberProjects:
+              type: integer
+              minimum: 0
+              example: 3
+            projects:
+              type: array
+              items:
+                $ref: '#/components/schemas/Project'
+
     CompanyProfileResponse:
       allOf:
         - $ref: '#/components/schemas/Company'
@@ -634,6 +715,17 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Material'
+
+    PublicCompanyProfileResponse:
+      allOf:
+        - $ref: '#/components/schemas/PublicInstitution'
+        - type: object
+          required: [materials]
+          properties:
+            materials:
+              type: array
+              items:
+                $ref: '#/components/schemas/PublicMaterial'
 
     ProjectCountResponse:
       type: object
@@ -680,7 +772,7 @@ components:
           maxItems: 3
           description: Três materiais retornados pela consulta de itens recentes.
           items:
-            $ref: '#/components/schemas/Material'
+            $ref: '#/components/schemas/PublicMaterial'
 
     SearchResponse:
       type: object
@@ -700,7 +792,7 @@ components:
             materials:
               type: array
               items:
-                $ref: '#/components/schemas/Material'
+                $ref: '#/components/schemas/PublicMaterial'
         meta:
           type: object
           required: [numberProjects, numberMaterials, total]

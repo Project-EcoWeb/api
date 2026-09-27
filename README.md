@@ -163,8 +163,15 @@ As rotas privadas usam JWT. Depois do login, envie o token no cabeçalho:
 Authorization: Bearer <token>
 ```
 
-Na interface Swagger, clique em **Authorize** e informe o token para experimentar as
-operações protegidas.
+Visitantes podem consultar `GET /home`, `GET /search`, listagens e detalhes em
+`/projects` e `/materials`, e perfis em `/users/:id/profile` e
+`/institutions/:id/profile`. Materiais pausados ou doados não aparecem nas respostas
+públicas. Perfis públicos de usuários não incluem e-mail; perfis públicos de
+instituições mostram apenas nome, logo, localização e materiais publicados.
+
+Para ações pessoais ou de escrita, clique em **Authorize** no Swagger e informe o
+token. A instituição autenticada pode consultar inclusive materiais pausados ou
+doados por `GET /materials/me/:id`.
 
 ## Testes
 

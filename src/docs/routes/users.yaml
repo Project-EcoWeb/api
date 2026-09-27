@@ -64,8 +64,9 @@ paths:
       operationId: getUserProfileById
       summary: Obtém o perfil de um usuário por ID
       description: |
-        Retorna o perfil e os projetos do usuário indicado no caminho. A operação
-        ainda exige autenticação, embora consulte outro usuário.
+        Retorna o nome e os projetos do usuário indicado no caminho. O e-mail
+        cadastrado é visível somente no perfil autenticado `/users/me/profile`.
+      security: []
       parameters:
         - $ref: '#/components/parameters/MongoIdPath'
       responses:
@@ -74,9 +75,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserProfileResponse'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
+                $ref: '#/components/schemas/PublicUserProfileResponse'
         '404':
           description: Usuário não encontrado.
           content:

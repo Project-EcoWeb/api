@@ -2,6 +2,7 @@ import UserRepository from '../../domain/repositories/UserRespository.js';
 import UserValidator from '../validations/UserValidator.js';
 import AppError from '../../shared/error/AppError.js';
 import ProjectRepository from "../../domain/repositories/ProjectRepository.js";
+import { isValidObjectId } from 'mongoose';
 class UserService{
     static async find() {
         
@@ -36,6 +37,22 @@ class UserService{
                 projects
             }
         }
+    }
+
+    static async findPublicById(id) {
+        if (!isValidObjectId(id)) throw new AppError('user not found', 404);
+        const user = await UserRepository.findById(id);
+        if (!user) throw new AppError('user not found', 404);
+
+        const projects = await ProjectRepository.findByUser(id);
+        return {
+            user: {
+                id: user.id,
+                name: user.name,
+                numberProjects: projects.length,
+                projects
+            }
+        };
     }
 }
 export default UserService;
