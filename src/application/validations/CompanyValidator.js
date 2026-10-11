@@ -1,4 +1,4 @@
-import CompanyRepository from '../../domain/repositorys/CompanyRepository.js';
+import CompanyRepository from '../../domain/repositories/CompanyRepository.js';
 
 class CompanyValidator {
     static async isExists(id) {
@@ -12,7 +12,7 @@ class CompanyValidator {
         }
     }
     static async isExistsByName(name) {
-        return !(await CompanyRepository.findByEmail(name)) ? false : true;
+        return !(await CompanyRepository.findByName(name)) ? false : true;
     }
 }
 

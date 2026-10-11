@@ -1,0 +1,58 @@
+paths:
+  /search:
+    get:
+      tags: [Busca]
+      operationId: searchProjectsAndMaterials
+      summary: Busca projetos e materiais por texto
+      description: |
+        Executa uma busca parcial e sem diferenciação entre maiúsculas e minúsculas:
+        em `title` para projetos e em `name` para materiais. Retorna os dois grupos e
+        suas contagens. Somente materiais `publicado` aparecem. O texto é tratado
+        literalmente, com limite de 100 caracteres. Quando `query` é omitido ou
+        vazio, a implementação retorna uma mensagem em vez dos resultados.
+      security: []
+      parameters:
+        - name: query
+          in: query
+          required: false
+          description: Texto usado como expressão regular nas consultas de nome e título.
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 100
+          example: garrafa
+      responses:
+        '200':
+          description: Resultado agrupado ou aviso de consulta vazia.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/SearchResponse'
+                  - $ref: '#/components/schemas/EmptySearchResponse'
+              examples:
+                results:
+                  summary: Busca executada
+                  value:
+                    query: 'garrafa'
+                    results:
+                      projects: []
+                      materials: []
+                    meta:
+                      numberProjects: 0
+                      numberMaterials: 0
+                      total: 0
+                emptyQuery:
+                  summary: Parâmetro ausente
+                  value:
+                    message: 'result not foun with this text'
+        '400':
+          description: Consulta não textual ou maior que 100 caracteres.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                message: 'query must be a string with at most 100 characters'
+        '500':
+          $ref: '#/components/responses/InternalServerError'

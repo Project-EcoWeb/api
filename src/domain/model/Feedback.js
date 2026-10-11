@@ -9,7 +9,7 @@ const feedbackSchema = new Schema({
     },
     supplier: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Company',
         required: [true, 'id user supplier is required']
     },
     receiver: {

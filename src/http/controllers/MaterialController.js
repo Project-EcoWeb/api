@@ -30,7 +30,15 @@ class MaterialController{
     }
     static async getById(req, res) {
         try {
-            const material = await MaterialService.getById({ id: req.params.id, user: req.userId });
+            const material = await MaterialService.getPublishedById(req.params.id);
+            return res.json(material);
+        } catch (error) {
+            return res.status(error.statusCode || 500).json({ message: error.message });
+        }
+    }
+    static async getMineById(req, res) {
+        try {
+            const material = await MaterialService.getOwnedById({ id: req.params.id, user: req.userId });
             return res.json(material);
         } catch (error) {
             return res.status(error.statusCode || 500).json({ message: error.message });

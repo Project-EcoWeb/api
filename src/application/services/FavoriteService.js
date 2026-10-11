@@ -1,4 +1,4 @@
-import FavoriteRepository from '../../domain/repositorys/FavoriteRepository.js';
+import FavoriteRepository from '../../domain/repositories/FavoriteRepository.js';
 import UserValidator from '../validations/UserValidator.js';
 import AppError from '../../shared/error/AppError.js';
 

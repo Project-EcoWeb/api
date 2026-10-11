@@ -17,7 +17,7 @@ class UserController{
             return res.status(204).end();
 
         } catch (error) {
-            return res.status(error.statuCode || 500).json({ message: error.message });
+            return res.status(error.statusCode || 500).json({ message: error.message });
         }
     }
 
@@ -36,7 +36,7 @@ class UserController{
     static async getProfile(req, res) {
         try {
             const { id } = req.params;
-            const data = await UserService.findById(id);
+            const data = await UserService.findPublicById(id);
             return res.json(data);
         } catch (error) {
             return res.status(error.statusCode || 500).json({ message: error.message });

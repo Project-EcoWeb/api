@@ -1,8 +1,8 @@
-import MaterialRepository from "../../domain/repositorys/MaterialRepository.js";
+import MaterialRepository from "../../domain/repositories/MaterialRepository.js";
 
 class MaterialValidator {
     static async isExists(id) {
-        return !MaterialRepository.findById(id) ? false: true;
+        return !(await MaterialRepository.findById(id)) ? false : true;
     }
     static async checkUser({ id, user }) {
         const { company: userSaved } = await MaterialRepository.findById(id);

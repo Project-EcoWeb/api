@@ -1,10 +1,10 @@
-import UserRespository from "../../domain/repositorys/UserRespository.js";
+import UserRespository from "../../domain/repositories/UserRespository.js";
 import AppError from "../../shared/error/AppError.js";
 import jwt from 'jsonwebtoken';
 import authConfig from '../../shared/config/auth.js';
 import UserValidator from "../validations/UserValidator.js";
 import CompanyValidator from "../validations/CompanyValidator.js";
-import CompanyRepository from "../../domain/repositorys/CompanyRepository.js";
+import CompanyRepository from "../../domain/repositories/CompanyRepository.js";
 
 class AuthService{
     static async register({ name, email, password}){
